@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Duke {
+public class Damien {
     private static final String LINE = "____________________________________________________________";
     private static final int MAX_TASKS = 100;
 
@@ -10,7 +10,7 @@ public class Duke {
         int taskCount = 0;
 
         System.out.println(LINE);
-        System.out.println("Hello! I'm Duke");
+        System.out.println("Hello! I'm Damien");
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 

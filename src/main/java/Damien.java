@@ -34,63 +34,65 @@ public class Damien {
                 break;
             }
 
-            if (command.equals("list")) {
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + "." + tasks[i]);
-                }
-            } else if (command.equals(MARK_COMMAND) || command.startsWith(MARK_PREFIX)) {
-                int taskIndex = getTaskIndex(command, MARK_COMMAND);
-                if (isValidTaskIndex(taskIndex, taskCount)) {
-                    tasks[taskIndex].markAsDone();
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + tasks[taskIndex]);
-                } else {
-                    printError("Please enter a valid task number to mark.");
-                }
-            } else if (command.equals(UNMARK_COMMAND) || command.startsWith(UNMARK_PREFIX)) {
-                int taskIndex = getTaskIndex(command, UNMARK_COMMAND);
-                if (isValidTaskIndex(taskIndex, taskCount)) {
-                    tasks[taskIndex].unmark();
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  " + tasks[taskIndex]);
-                } else {
-                    printError("Please enter a valid task number to unmark.");
-                }
-            } else if (command.equals(TODO_COMMAND) || command.startsWith(TODO_PREFIX)) {
-                String description = command.substring(TODO_COMMAND.length()).trim();
-                if (description.isEmpty()) {
-                    printError("The description of a todo cannot be empty.");
-                } else {
-                    taskCount = addTask(tasks, taskCount, new Todo(description));
-                }
-            } else if (command.equals(DEADLINE_COMMAND) || command.startsWith(DEADLINE_PREFIX)) {
-                Task deadline = parseDeadline(command.substring(DEADLINE_COMMAND.length()).trim());
-                if (deadline != null) {
-                    taskCount = addTask(tasks, taskCount, deadline);
-                } else {
-                    printError("A deadline needs a description and a /by date or time.");
-                }
-            } else if (command.equals(EVENT_COMMAND) || command.startsWith(EVENT_PREFIX)) {
-                Task event = parseEvent(command.substring(EVENT_COMMAND.length()).trim());
-                if (event != null) {
-                    taskCount = addTask(tasks, taskCount, event);
-                } else {
-                    printError("An event needs a description, a /from time, and a /to time.");
-                }
-            } else {
-                printError("I'm sorry, but I don't know what that means :-(");
+            try {
+                taskCount = processCommand(command, tasks, taskCount);
+            } catch (DamienException exception) {
+                printError(exception);
             }
 
             System.out.println(LINE);
         }
     }
 
-    private static int getTaskIndex(String command, String commandName) {
+    private static int processCommand(String command, Task[] tasks, int taskCount)
+            throws DamienException {
+        if (command.equals("list")) {
+            System.out.println("Here are the tasks in your list:");
+            for (int i = 0; i < taskCount; i++) {
+                System.out.println((i + 1) + "." + tasks[i]);
+            }
+        } else if (command.equals(MARK_COMMAND) || command.startsWith(MARK_PREFIX)) {
+            int taskIndex = getTaskIndex(command, MARK_COMMAND);
+            if (isValidTaskIndex(taskIndex, taskCount)) {
+                tasks[taskIndex].markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("  " + tasks[taskIndex]);
+            } else {
+                throw new DamienException("Please enter a valid task number to mark.");
+            }
+        } else if (command.equals(UNMARK_COMMAND) || command.startsWith(UNMARK_PREFIX)) {
+            int taskIndex = getTaskIndex(command, UNMARK_COMMAND);
+            if (isValidTaskIndex(taskIndex, taskCount)) {
+                tasks[taskIndex].unmark();
+                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.println("  " + tasks[taskIndex]);
+            } else {
+                throw new DamienException("Please enter a valid task number to unmark.");
+            }
+        } else if (command.equals(TODO_COMMAND) || command.startsWith(TODO_PREFIX)) {
+            String description = command.substring(TODO_COMMAND.length()).trim();
+            if (description.isEmpty()) {
+                throw new DamienException("The description of a todo cannot be empty.");
+            }
+            taskCount = addTask(tasks, taskCount, new Todo(description));
+        } else if (command.equals(DEADLINE_COMMAND) || command.startsWith(DEADLINE_PREFIX)) {
+            Task deadline = parseDeadline(command.substring(DEADLINE_COMMAND.length()).trim());
+            taskCount = addTask(tasks, taskCount, deadline);
+        } else if (command.equals(EVENT_COMMAND) || command.startsWith(EVENT_PREFIX)) {
+            Task event = parseEvent(command.substring(EVENT_COMMAND.length()).trim());
+            taskCount = addTask(tasks, taskCount, event);
+        } else {
+            throw new DamienException("I'm sorry, but I don't know what that means :-(");
+        }
+
+        return taskCount;
+    }
+
+    private static int getTaskIndex(String command, String commandName) throws DamienException {
         try {
             return Integer.parseInt(command.substring(commandName.length()).trim()) - 1;
         } catch (NumberFormatException exception) {
-            return -1;
+            throw new DamienException("Please enter a valid task number to " + commandName + ".");
         }
     }
 
@@ -98,39 +100,39 @@ public class Damien {
         return taskIndex >= 0 && taskIndex < taskCount;
     }
 
-    private static Task parseDeadline(String command) {
+    private static Task parseDeadline(String command) throws DamienException {
         int byIndex = command.indexOf("/by");
         if (byIndex < 0) {
-            return null;
+            throw new DamienException("A deadline needs a description and a /by date or time.");
         }
 
         String description = command.substring(0, byIndex).trim();
         String by = command.substring(byIndex + "/by".length()).trim();
         if (description.isEmpty() || by.isEmpty()) {
-            return null;
+            throw new DamienException("A deadline needs a description and a /by date or time.");
         }
         return new Deadline(description, by);
     }
 
-    private static Task parseEvent(String command) {
+    private static Task parseEvent(String command) throws DamienException {
         int fromIndex = command.indexOf("/from");
         int toIndex = command.indexOf("/to", fromIndex + "/from".length());
         if (fromIndex < 0 || toIndex < 0) {
-            return null;
+            throw new DamienException("An event needs a description, a /from time, and a /to time.");
         }
 
         String description = command.substring(0, fromIndex).trim();
         String from = command.substring(fromIndex + "/from".length(), toIndex).trim();
         String to = command.substring(toIndex + "/to".length()).trim();
         if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-            return null;
+            throw new DamienException("An event needs a description, a /from time, and a /to time.");
         }
         return new Event(description, from, to);
     }
 
-    private static int addTask(Task[] tasks, int taskCount, Task task) {
+    private static int addTask(Task[] tasks, int taskCount, Task task) throws DamienException {
         if (taskCount >= MAX_TASKS) {
-            return taskCount;
+            throw new DamienException("The task list is full.");
         }
 
         tasks[taskCount] = task;
@@ -141,7 +143,7 @@ public class Damien {
         return taskCount;
     }
 
-    private static void printError(String message) {
-        System.out.println(" OOPS!!! " + message);
+    private static void printError(DamienException exception) {
+        System.out.println(" OOPS!!! " + exception.getMessage());
     }
 }

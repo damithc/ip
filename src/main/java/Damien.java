@@ -48,7 +48,7 @@ public class Damien {
                 }
             } else if (command.startsWith(TODO_PREFIX)) {
                 taskCount = addTask(tasks, taskCount,
-                        new Task(command.substring(TODO_PREFIX.length()).trim()));
+                        new Todo(command.substring(TODO_PREFIX.length()).trim()));
             } else if (command.startsWith(DEADLINE_PREFIX)) {
                 Task deadline = parseDeadline(command.substring(DEADLINE_PREFIX.length()).trim());
                 if (deadline != null) {
@@ -61,7 +61,7 @@ public class Damien {
                 }
             } else {
                 // Keep accepting plain text as a ToDo, as in the previous increment.
-                taskCount = addTask(tasks, taskCount, new Task(command));
+                taskCount = addTask(tasks, taskCount, new Todo(command));
             }
 
             System.out.println(LINE);
@@ -91,7 +91,7 @@ public class Damien {
         if (description.isEmpty() || by.isEmpty()) {
             return null;
         }
-        return new Task(description, by);
+        return new Deadline(description, by);
     }
 
     private static Task parseEvent(String command) {
@@ -107,7 +107,7 @@ public class Damien {
         if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
             return null;
         }
-        return new Task(description, from, to);
+        return new Event(description, from, to);
     }
 
     private static int addTask(Task[] tasks, int taskCount, Task task) {

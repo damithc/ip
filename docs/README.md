@@ -1,30 +1,52 @@
 # Damien User Guide
 
-// Update the title above to match the actual product name
+Damien keeps a list of three kinds of tasks: ToDos, deadlines, and events.
 
-// Product screenshot goes here
+## Adding a ToDo
 
-// Product intro goes here
-
-## Adding deadlines
-
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
+Use `todo` followed by a task description:
 
 ```
-expected output
+todo borrow book
 ```
 
-## Feature ABC
+Damien displays the new task as follows:
 
-// Feature details
+```
+[T][ ] borrow book
+```
 
+## Adding a deadline
 
-## Feature XYZ
+Use `/by` to separate the task description from the date or time. Dates and
+times are kept as text, so you can use formats such as `Sunday` or `11/10/2019
+5pm`:
 
-// Feature details
+```
+deadline return book /by Sunday
+```
+
+The task is displayed as:
+
+```
+[D][ ] return book (by: Sunday)
+```
+
+## Adding an event
+
+Use `/from` and `/to` to specify the start and end date or time:
+
+```
+event project meeting /from Mon 2pm /to 4pm
+```
+
+The task is displayed as:
+
+```
+[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
+## Viewing and updating tasks
+
+Use `list` to view all tasks. Use `mark 1` or `unmark 1` to change the
+completion status of the first task in the list.

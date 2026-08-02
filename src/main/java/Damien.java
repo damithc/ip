@@ -1,15 +1,11 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Runs the Damien command-line todo-list chatbot.
  */
 public class Damien {
-    /** The separator printed around each chatbot response. */
-    private static final String LINE = "____________________________________________________________";
-
     /** The relative path used to persist Damien's task list. */
     private static final Path DATA_FILE = Paths.get("data", "duke.txt");
 
@@ -19,41 +15,34 @@ public class Damien {
      * @param args command-line arguments, which are not used by Damien
      */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
         Storage storage = new Storage(DATA_FILE);
         ArrayList<Task> tasks;
         try {
             tasks = storage.load();
         } catch (DamienException exception) {
-            printError(exception);
+            ui.showError(exception);
             tasks = new ArrayList<>();
         }
 
-        System.out.println(LINE);
-        System.out.println("Hello! I'm Damien");
-        System.out.println("What can I do for you?");
-        if (storage.getCorruptedRecordCount() > 0) {
-            printCorruptionWarning(storage.getCorruptedRecordCount());
-        }
-        System.out.println(LINE);
+        ui.showWelcome(storage.getCorruptedRecordCount());
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
-            System.out.println(LINE);
+        while (ui.hasNextLine()) {
+            String command = ui.readCommand();
+            ui.showLine();
 
             if (CommandType.fromInput(command) == CommandType.BYE) {
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(LINE);
+                ui.showGoodbye();
                 break;
             }
 
             try {
-                processCommand(command, tasks, storage);
+                processCommand(command, tasks, storage, ui);
             } catch (DamienException exception) {
-                printError(exception);
+                ui.showError(exception);
             }
 
-            System.out.println(LINE);
+            ui.showLine();
         }
     }
 
@@ -63,9 +52,10 @@ public class Damien {
      * @param command the command entered by the user
      * @param tasks the collection of tasks being managed
      * @param storage the file storage used to persist changes
+     * @param ui the user interface used to display responses
      * @throws DamienException if the command is invalid
      */
-    private static void processCommand(String command, ArrayList<Task> tasks, Storage storage)
+    private static void processCommand(String command, ArrayList<Task> tasks, Storage storage, Ui ui)
             throws DamienException {
         CommandType commandType = CommandType.fromInput(command);
         if (commandType == null) {
@@ -74,18 +64,14 @@ public class Damien {
 
         switch (commandType) {
         case LIST:
-            System.out.println("Here are the tasks in your list:");
-            for (int i = 0; i < tasks.size(); i++) {
-                System.out.println((i + 1) + "." + tasks.get(i));
-            }
+            ui.showTaskList(tasks);
             break;
         case MARK:
             int taskIndex = getTaskIndex(command, commandType.getKeyword());
             if (isValidTaskIndex(taskIndex, tasks.size())) {
                 tasks.get(taskIndex).markAsDone();
                 storage.save(tasks);
-                System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  " + tasks.get(taskIndex));
+                ui.showTaskMarkedAsDone(tasks.get(taskIndex));
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
@@ -95,8 +81,7 @@ public class Damien {
             if (isValidTaskIndex(taskIndex, tasks.size())) {
                 tasks.get(taskIndex).unmark();
                 storage.save(tasks);
-                System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  " + tasks.get(taskIndex));
+                ui.showTaskUnmarked(tasks.get(taskIndex));
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
@@ -104,7 +89,7 @@ public class Damien {
         case DELETE:
             taskIndex = getTaskIndex(command, commandType.getKeyword());
             if (isValidTaskIndex(taskIndex, tasks.size())) {
-                deleteTask(tasks, taskIndex, storage);
+                deleteTask(tasks, taskIndex, storage, ui);
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
@@ -114,15 +99,15 @@ public class Damien {
             if (description.isEmpty()) {
                 throw new DamienException("The description of a todo cannot be empty.");
             }
-            addTask(tasks, new Todo(description), storage);
+            addTask(tasks, new Todo(description), storage, ui);
             break;
         case DEADLINE:
             Task deadline = parseDeadline(command.substring(commandType.getKeyword().length()).trim());
-            addTask(tasks, deadline, storage);
+            addTask(tasks, deadline, storage, ui);
             break;
         case EVENT:
             Task event = parseEvent(command.substring(commandType.getKeyword().length()).trim());
-            addTask(tasks, event, storage);
+            addTask(tasks, event, storage, ui);
             break;
         default:
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
@@ -135,15 +120,14 @@ public class Damien {
      * @param tasks the collection of tasks being managed
      * @param taskIndex the zero-based index of the task to remove
      * @param storage the file storage used to persist changes
+     * @param ui the user interface used to display responses
      */
-    private static void deleteTask(ArrayList<Task> tasks, int taskIndex, Storage storage)
+    private static void deleteTask(ArrayList<Task> tasks, int taskIndex, Storage storage, Ui ui)
             throws DamienException {
         Task deletedTask = tasks.remove(taskIndex);
         storage.save(tasks);
 
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + deletedTask);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        ui.showTaskDeleted(deletedTask, tasks.size());
     }
 
     /**
@@ -265,34 +249,12 @@ public class Damien {
      * @param tasks the collection of tasks being managed
      * @param task the task to add
      * @param storage the file storage used to persist changes
+     * @param ui the user interface used to display responses
      */
-    private static void addTask(ArrayList<Task> tasks, Task task, Storage storage)
+    private static void addTask(ArrayList<Task> tasks, Task task, Storage storage, Ui ui)
             throws DamienException {
         tasks.add(task);
         storage.save(tasks);
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-    }
-
-    /**
-     * Prints a user-friendly error message for a rejected command.
-     *
-     * @param exception the error raised while processing the command
-     */
-    private static void printError(DamienException exception) {
-        System.out.println(" OOPS!!! " + exception.getMessage());
-    }
-
-    /**
-     * Tells the user that invalid saved records were skipped during startup.
-     *
-     * @param corruptedRecordCount the number of records that were skipped
-     */
-    private static void printCorruptionWarning(int corruptedRecordCount) {
-        String recordLabel = corruptedRecordCount == 1 ? "record" : "records";
-        String pronoun = corruptedRecordCount == 1 ? "it" : "them";
-        System.out.println("Warning: I found " + corruptedRecordCount
-                + " invalid saved task " + recordLabel + " and skipped " + pronoun + ".");
+        ui.showTaskAdded(task, tasks.size());
     }
 }

@@ -54,13 +54,13 @@ public class Damien {
             String command = ui.readCommand();
             ui.showLine();
 
-            if (CommandType.fromInput(command) == CommandType.BYE) {
-                ui.showGoodbye();
-                break;
-            }
-
             try {
-                commandHandler.handle(command);
+                CommandType commandType = parser.parseCommand(command);
+                if (commandType == CommandType.BYE) {
+                    ui.showGoodbye();
+                    break;
+                }
+                commandHandler.handle(command, commandType);
             } catch (DamienException exception) {
                 ui.showError(exception);
             }

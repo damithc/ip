@@ -1,5 +1,5 @@
 /**
- * Executes commands after they have been entered by the user.
+ * Executes non-termination commands after they have been entered by the user.
  *
  * <p>This class coordinates parsing, task-list changes, persistence, and
  * responses for one running Damien application.</p>
@@ -33,14 +33,13 @@ public class CommandHandler {
     }
 
     /**
-     * Parses one command and applies its change to the task list.
+     * Applies one parsed command to the task list.
      *
      * @param command the command entered by the user
+     * @param commandType the type identified by the parser
      * @throws DamienException if the command is invalid
      */
-    public void handle(String command) throws DamienException {
-        CommandType commandType = parser.parseCommand(command);
-
+    public void handle(String command, CommandType commandType) throws DamienException {
         switch (commandType) {
         case LIST:
             ui.showTaskList(tasks);

@@ -8,42 +8,6 @@ public class Damien {
     /** The separator printed around each chatbot response. */
     private static final String LINE = "____________________________________________________________";
 
-    /** The command for adding a ToDo task. */
-    private static final String TODO_COMMAND = "todo";
-
-    /** The prefix used to recognize a ToDo command with a description. */
-    private static final String TODO_PREFIX = "todo ";
-
-    /** The command for adding a deadline task. */
-    private static final String DEADLINE_COMMAND = "deadline";
-
-    /** The prefix used to recognize a deadline command with task details. */
-    private static final String DEADLINE_PREFIX = "deadline ";
-
-    /** The command for adding an event task. */
-    private static final String EVENT_COMMAND = "event";
-
-    /** The prefix used to recognize an event command with task details. */
-    private static final String EVENT_PREFIX = "event ";
-
-    /** The command for marking a task as done. */
-    private static final String MARK_COMMAND = "mark";
-
-    /** The prefix used to recognize a mark command with a task number. */
-    private static final String MARK_PREFIX = "mark ";
-
-    /** The command for marking a task as not done. */
-    private static final String UNMARK_COMMAND = "unmark";
-
-    /** The prefix used to recognize an unmark command with a task number. */
-    private static final String UNMARK_PREFIX = "unmark ";
-
-    /** The command for deleting a task. */
-    private static final String DELETE_COMMAND = "delete";
-
-    /** The prefix used to recognize a delete command with a task number. */
-    private static final String DELETE_PREFIX = "delete ";
-
     /**
      * Starts Damien and processes commands until the user says goodbye.
      *
@@ -62,7 +26,7 @@ public class Damien {
             String command = scanner.nextLine();
             System.out.println(LINE);
 
-            if (command.equals("bye")) {
+            if (CommandType.fromInput(command) == CommandType.BYE) {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(LINE);
                 break;
@@ -87,13 +51,20 @@ public class Damien {
      */
     private static void processCommand(String command, ArrayList<Task> tasks)
             throws DamienException {
-        if (command.equals("list")) {
+        CommandType commandType = CommandType.fromInput(command);
+        if (commandType == null) {
+            throw new DamienException("I'm sorry, but I don't know what that means :-(");
+        }
+
+        switch (commandType) {
+        case LIST:
             System.out.println("Here are the tasks in your list:");
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println((i + 1) + "." + tasks.get(i));
             }
-        } else if (command.equals(MARK_COMMAND) || command.startsWith(MARK_PREFIX)) {
-            int taskIndex = getTaskIndex(command, MARK_COMMAND);
+            break;
+        case MARK:
+            int taskIndex = getTaskIndex(command, commandType.getKeyword());
             if (isValidTaskIndex(taskIndex, tasks.size())) {
                 tasks.get(taskIndex).markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
@@ -101,8 +72,9 @@ public class Damien {
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
-        } else if (command.equals(UNMARK_COMMAND) || command.startsWith(UNMARK_PREFIX)) {
-            int taskIndex = getTaskIndex(command, UNMARK_COMMAND);
+            break;
+        case UNMARK:
+            taskIndex = getTaskIndex(command, commandType.getKeyword());
             if (isValidTaskIndex(taskIndex, tasks.size())) {
                 tasks.get(taskIndex).unmark();
                 System.out.println("OK, I've marked this task as not done yet:");
@@ -110,26 +82,31 @@ public class Damien {
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
-        } else if (command.equals(DELETE_COMMAND) || command.startsWith(DELETE_PREFIX)) {
-            int taskIndex = getTaskIndex(command, DELETE_COMMAND);
+            break;
+        case DELETE:
+            taskIndex = getTaskIndex(command, commandType.getKeyword());
             if (isValidTaskIndex(taskIndex, tasks.size())) {
                 deleteTask(tasks, taskIndex);
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
-        } else if (command.equals(TODO_COMMAND) || command.startsWith(TODO_PREFIX)) {
-            String description = command.substring(TODO_COMMAND.length()).trim();
+            break;
+        case TODO:
+            String description = command.substring(commandType.getKeyword().length()).trim();
             if (description.isEmpty()) {
                 throw new DamienException("The description of a todo cannot be empty.");
             }
             addTask(tasks, new Todo(description));
-        } else if (command.equals(DEADLINE_COMMAND) || command.startsWith(DEADLINE_PREFIX)) {
-            Task deadline = parseDeadline(command.substring(DEADLINE_COMMAND.length()).trim());
+            break;
+        case DEADLINE:
+            Task deadline = parseDeadline(command.substring(commandType.getKeyword().length()).trim());
             addTask(tasks, deadline);
-        } else if (command.equals(EVENT_COMMAND) || command.startsWith(EVENT_PREFIX)) {
-            Task event = parseEvent(command.substring(EVENT_COMMAND.length()).trim());
+            break;
+        case EVENT:
+            Task event = parseEvent(command.substring(commandType.getKeyword().length()).trim());
             addTask(tasks, event);
-        } else {
+            break;
+        default:
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
         }
     }

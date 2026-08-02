@@ -12,6 +12,20 @@ authoritative; do not invent or replace it with an expected transcript. Check
 each response immediately and stop before sending any later input when a case
 fails.
 
+## Java runtime
+
+This project targets JDK 25. Before running the Gradle or CLI tests, select the
+project's configured JDK 25 candidate in the current shell:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+java -version
+javac -version
+```
+
+The `sdk use` selection applies only to the current shell, so repeat it when
+starting a new shell for testing.
+
 ## Workflow
 
 1. Work from the project root and read `tests/test-plan.md`. Use its test-case

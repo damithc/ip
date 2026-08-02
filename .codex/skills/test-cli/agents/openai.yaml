@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test CLI"
+  short_description: "Run ordered CLI tests with transcripts"
+  default_prompt: "Use $test-cli to test this project's CLI from tests/test-plan.md and report actual terminal-style output."

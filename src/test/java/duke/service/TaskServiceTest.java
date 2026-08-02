@@ -1,5 +1,7 @@
 package duke.service;
 
+import java.nio.file.Path;
+
 import duke.exception.DamienException;
 import duke.storage.Storage;
 import duke.task.Task;
@@ -7,8 +9,6 @@ import duke.task.TaskList;
 import duke.task.Todo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

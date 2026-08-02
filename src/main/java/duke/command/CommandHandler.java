@@ -50,7 +50,9 @@ public class CommandHandler {
             deleteTask(command.getTaskIndex());
             break;
         case TODO:
+        // Fallthrough
         case DEADLINE:
+        // Fallthrough
         case EVENT:
             addTask(command.getTask());
             break;

@@ -18,12 +18,36 @@ public class Task {
         this.isDone = false;
     }
 
+    /**
+     * Marks this task as completed.
+     */
     public void markAsDone() {
         isDone = true;
     }
 
+    /**
+     * Marks this task as not completed.
+     */
     public void unmark() {
         isDone = false;
+    }
+
+    /**
+     * Returns the task description for persistence and other task operations.
+     *
+     * @return the task description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Returns whether this task has been completed.
+     *
+     * @return true when the task is complete
+     */
+    public boolean isDone() {
+        return isDone;
     }
 
     /**

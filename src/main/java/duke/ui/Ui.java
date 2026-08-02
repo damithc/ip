@@ -1,4 +1,10 @@
+package duke.ui;
+
 import java.util.Scanner;
+
+import duke.exception.DamienException;
+import duke.task.Task;
+import duke.task.TaskList;
 
 /**
  * Handles Damien's interaction with the user through the command line.

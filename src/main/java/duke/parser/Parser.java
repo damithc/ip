@@ -1,3 +1,13 @@
+package duke.parser;
+
+import duke.command.Command;
+import duke.command.CommandType;
+import duke.exception.DamienException;
+import duke.task.Deadline;
+import duke.task.Event;
+import duke.task.Task;
+import duke.task.Todo;
+
 /**
  * Interprets user commands and extracts the information needed to execute them.
  */

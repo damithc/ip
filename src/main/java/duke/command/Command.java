@@ -1,3 +1,7 @@
+package duke.command;
+
+import duke.task.Task;
+
 /**
  * Represents a user command after it has been interpreted by the parser.
  *

@@ -1,3 +1,5 @@
+package duke.command;
+
 /**
  * Represents the fixed set of commands Damien understands.
  * Each command stores the keyword a user types and whether it can have an argument.

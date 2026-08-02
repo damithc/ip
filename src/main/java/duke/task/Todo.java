@@ -1,3 +1,5 @@
+package duke.task;
+
 /**
  * A task without a deadline or scheduled time interval.
  */

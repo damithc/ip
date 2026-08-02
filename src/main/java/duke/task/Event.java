@@ -1,3 +1,5 @@
+package duke.task;
+
 /**
  * A task that takes place during a specified time interval.
  */

@@ -1,3 +1,5 @@
+package duke.exception;
+
 /**
  * Represents an error caused by an invalid Damien command or task input.
  */

@@ -1,4 +1,16 @@
+package duke;
+
 import java.nio.file.Paths;
+
+import duke.command.Command;
+import duke.command.CommandHandler;
+import duke.command.CommandType;
+import duke.exception.DamienException;
+import duke.parser.Parser;
+import duke.service.TaskService;
+import duke.storage.Storage;
+import duke.task.TaskList;
+import duke.ui.Ui;
 
 /**
  * Coordinates Damien's user interface, storage, parser, task list, and

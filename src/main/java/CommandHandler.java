@@ -14,38 +14,32 @@ public class CommandHandler {
     /** Displays command results and errors to the user. */
     private final Ui ui;
 
-    /** Interprets command text and extracts command arguments. */
-    private final Parser parser;
-
     /**
      * Creates a command handler using the given application collaborators.
      *
      * @param tasks the task list to change
      * @param storage the storage used to save changes
      * @param ui the user interface used to show results
-     * @param parser the parser used to interpret commands
      */
-    public CommandHandler(TaskList tasks, Storage storage, Ui ui, Parser parser) {
+    public CommandHandler(TaskList tasks, Storage storage, Ui ui) {
         this.tasks = tasks;
         this.storage = storage;
         this.ui = ui;
-        this.parser = parser;
     }
 
     /**
-     * Applies one parsed command to the task list.
+     * Executes one parsed command on the task list.
      *
-     * @param command the command entered by the user
-     * @param commandType the type identified by the parser
+     * @param command the command interpreted by the parser
      * @throws DamienException if the command is invalid
      */
-    public void handle(String command, CommandType commandType) throws DamienException {
-        switch (commandType) {
+    public void handle(Command command) throws DamienException {
+        switch (command.getType()) {
         case LIST:
             ui.showTaskList(tasks);
             break;
         case MARK:
-            int taskIndex = parser.parseTaskIndex(command, commandType);
+            int taskIndex = command.getTaskIndex();
             if (tasks.isValidIndex(taskIndex)) {
                 tasks.markAsDone(taskIndex);
                 storage.save(tasks);
@@ -55,7 +49,7 @@ public class CommandHandler {
             }
             break;
         case UNMARK:
-            taskIndex = parser.parseTaskIndex(command, commandType);
+            taskIndex = command.getTaskIndex();
             if (tasks.isValidIndex(taskIndex)) {
                 tasks.unmark(taskIndex);
                 storage.save(tasks);
@@ -65,7 +59,7 @@ public class CommandHandler {
             }
             break;
         case DELETE:
-            taskIndex = parser.parseTaskIndex(command, commandType);
+            taskIndex = command.getTaskIndex();
             if (tasks.isValidIndex(taskIndex)) {
                 deleteTask(taskIndex);
             } else {
@@ -73,16 +67,13 @@ public class CommandHandler {
             }
             break;
         case TODO:
-            String description = parser.parseTodoDescription(command, commandType);
-            addTask(new Todo(description));
+            addTask(command.getTask());
             break;
         case DEADLINE:
-            Task deadline = parser.parseDeadline(command, commandType);
-            addTask(deadline);
+            addTask(command.getTask());
             break;
         case EVENT:
-            Task event = parser.parseEvent(command, commandType);
-            addTask(event);
+            addTask(command.getTask());
             break;
         default:
             throw new DamienException("I'm sorry, but I don't know what that means :-(");

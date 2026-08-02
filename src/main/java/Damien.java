@@ -41,7 +41,7 @@ public class Damien {
             ui.showError(exception);
             tasks = new TaskList();
         }
-        commandHandler = new CommandHandler(tasks, storage, ui, parser);
+        commandHandler = new CommandHandler(tasks, storage, ui);
     }
 
     /**
@@ -55,12 +55,12 @@ public class Damien {
             ui.showLine();
 
             try {
-                CommandType commandType = parser.parseCommand(command);
-                if (commandType == CommandType.BYE) {
+                Command parsedCommand = parser.parse(command);
+                if (parsedCommand.getType() == CommandType.BYE) {
                     ui.showGoodbye();
                     break;
                 }
-                commandHandler.handle(command, commandType);
+                commandHandler.handle(parsedCommand);
             } catch (DamienException exception) {
                 ui.showError(exception);
             }

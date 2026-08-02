@@ -3,18 +3,33 @@
  */
 public class Parser {
     /**
-     * Identifies the command represented by a complete input line.
+     * Interprets a complete input line into a command ready for execution.
      *
      * @param input the complete line entered by the user
-     * @return the command type represented by the input
+     * @return the parsed command
      * @throws DamienException if the input is not a recognised command
      */
-    public CommandType parseCommand(String input) throws DamienException {
+    public Command parse(String input) throws DamienException {
         CommandType commandType = CommandType.fromInput(input);
         if (commandType == null) {
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
         }
-        return commandType;
+
+        switch (commandType) {
+        case MARK:
+        case UNMARK:
+        case DELETE:
+            return new Command(commandType, parseTaskIndex(input, commandType));
+        case TODO:
+            return new Command(commandType,
+                    new Todo(parseTodoDescription(input, commandType)));
+        case DEADLINE:
+            return new Command(commandType, parseDeadline(input, commandType));
+        case EVENT:
+            return new Command(commandType, parseEvent(input, commandType));
+        default:
+            return new Command(commandType);
+        }
     }
 
     /**
@@ -25,7 +40,7 @@ public class Parser {
      * @return the non-empty ToDo description
      * @throws DamienException if the description is empty
      */
-    public String parseTodoDescription(String command, CommandType commandType)
+    private String parseTodoDescription(String command, CommandType commandType)
             throws DamienException {
         String description = getArgument(command, commandType);
         if (description.isEmpty()) {
@@ -42,7 +57,7 @@ public class Parser {
      * @return the zero-based task index
      * @throws DamienException if the command does not contain a positive integer
      */
-    public int parseTaskIndex(String command, CommandType commandType) throws DamienException {
+    private int parseTaskIndex(String command, CommandType commandType) throws DamienException {
         String commandName = commandType.getKeyword();
         String taskNumber = getArgument(command, commandType);
         if (taskNumber.isEmpty()) {
@@ -70,7 +85,7 @@ public class Parser {
      * @return the parsed deadline task
      * @throws DamienException if the description or /by field is missing
      */
-    public Task parseDeadline(String command, CommandType commandType) throws DamienException {
+    private Task parseDeadline(String command, CommandType commandType) throws DamienException {
         command = getArgument(command, commandType);
         int byIndex = command.indexOf("/by");
         if (byIndex < 0) {
@@ -99,7 +114,7 @@ public class Parser {
      * @return the parsed event task
      * @throws DamienException if the description, /from field, or /to field is missing
      */
-    public Task parseEvent(String command, CommandType commandType) throws DamienException {
+    private Task parseEvent(String command, CommandType commandType) throws DamienException {
         command = getArgument(command, commandType);
         int fromIndex = command.indexOf("/from");
         int toIndex = command.indexOf("/to", fromIndex + "/from".length());

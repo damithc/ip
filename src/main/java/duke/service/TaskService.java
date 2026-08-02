@@ -49,6 +49,16 @@ public class TaskService {
     }
 
     /**
+     * Finds tasks whose descriptions contain the given keyword.
+     *
+     * @param keyword the text to search for
+     * @return the matching tasks in their original order
+     */
+    public TaskList find(String keyword) {
+        return tasks.find(keyword);
+    }
+
+    /**
      * Adds a task and saves the updated list.
      *
      * @param task the task to add

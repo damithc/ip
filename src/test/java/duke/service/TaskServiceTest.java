@@ -88,6 +88,26 @@ public class TaskServiceTest {
     }
 
     /**
+     * Verifies that finding tasks returns matching tasks without changing the list.
+     */
+    @Test
+    public void findReturnsMatchingTasksWithoutChangingTaskList() {
+        TaskList tasks = new TaskList();
+        Task matchingTask = new Todo("read book");
+        Task nonMatchingTask = new Todo("attend class");
+        tasks.add(matchingTask);
+        tasks.add(nonMatchingTask);
+        TaskService service = new TaskService(tasks,
+                new Storage(temporaryDirectory.resolve("tasks.txt")));
+
+        TaskList matchingTasks = service.find("book");
+
+        assertEquals(2, service.size());
+        assertEquals(1, matchingTasks.size());
+        assertSame(matchingTask, matchingTasks.get(0));
+    }
+
+    /**
      * Verifies that an invalid task index is rejected without changing the list.
      */
     @Test

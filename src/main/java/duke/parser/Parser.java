@@ -32,6 +32,8 @@ public class Parser {
         // Fallthrough
         case DELETE:
             return new Command(commandType, parseTaskIndex(input, commandType));
+        case FIND:
+            return new Command(commandType, parseFindKeyword(input, commandType));
         case TODO:
             return new Command(commandType,
                     new Todo(parseTodoDescription(input, commandType)));
@@ -59,6 +61,23 @@ public class Parser {
             throw new DamienException("The description of a todo cannot be empty.");
         }
         return description;
+    }
+
+    /**
+     * Extracts and validates the keyword of a find command.
+     *
+     * @param command the complete find command
+     * @param commandType the command type identified from the input
+     * @return the non-empty search keyword
+     * @throws DamienException if the keyword is empty
+     */
+    private String parseFindKeyword(String command, CommandType commandType)
+            throws DamienException {
+        String keyword = getArgument(command, commandType);
+        if (keyword.isEmpty()) {
+            throw new DamienException("Please provide a keyword after find, for example: find book.");
+        }
+        return keyword;
     }
 
     /**

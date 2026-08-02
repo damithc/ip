@@ -106,6 +106,26 @@ public class TaskListTest {
     }
 
     /**
+     * Verifies that find returns case-insensitive description matches in order.
+     */
+    @Test
+    public void findReturnsMatchingTasksInOriginalOrder() {
+        TaskList taskList = new TaskList();
+        Task firstMatch = new Todo("read book");
+        Task nonMatch = new Todo("attend meeting");
+        Task secondMatch = new Todo("return BOOK");
+        taskList.add(firstMatch);
+        taskList.add(nonMatch);
+        taskList.add(secondMatch);
+
+        TaskList matchingTasks = taskList.find("book");
+
+        assertEquals(2, matchingTasks.size());
+        assertSame(firstMatch, matchingTasks.get(0));
+        assertSame(secondMatch, matchingTasks.get(1));
+    }
+
+    /**
      * Verifies that {@code markAsDone} changes the selected task's status.
      */
     @Test

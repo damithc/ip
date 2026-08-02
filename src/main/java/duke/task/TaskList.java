@@ -2,6 +2,7 @@ package duke.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Owns Damien's tasks and provides operations for changing the collection.
@@ -66,6 +67,24 @@ public class TaskList {
      */
     public boolean isValidIndex(int index) {
         return index >= 0 && index < tasks.size();
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the given keyword.
+     * Matching is case-insensitive and keeps the original task order.
+     *
+     * @param keyword the text to search for
+     * @return a task list containing the matching tasks
+     */
+    public TaskList find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        TaskList matchingTasks = new TaskList();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
     }
 
     /**

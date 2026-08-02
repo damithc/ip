@@ -6,8 +6,8 @@ import duke.task.Task;
  * Represents a user command after it has been interpreted by the parser.
  *
  * <p>A command can carry either a task index or a newly created task,
- * depending on the command type. Commands such as {@code list} and
- * {@code bye} carry neither.</p>
+ * depending on the command type. A {@code find} command carries a search
+ * keyword. Commands such as {@code list} and {@code bye} carry none of these.</p>
  */
 public class Command {
     /** The kind of action requested by the user. */
@@ -19,13 +19,16 @@ public class Command {
     /** The task created by a todo, deadline, or event command. */
     private final Task task;
 
+    /** The keyword used by a find command. */
+    private final String keyword;
+
     /**
      * Creates a command that does not need additional data.
      *
      * @param type the kind of command
      */
     public Command(CommandType type) {
-        this(type, null, null);
+        this(type, null, null, null);
     }
 
     /**
@@ -35,7 +38,7 @@ public class Command {
      * @param taskIndex the zero-based index of the task
      */
     public Command(CommandType type, int taskIndex) {
-        this(type, taskIndex, null);
+        this(type, taskIndex, null, null);
     }
 
     /**
@@ -45,7 +48,17 @@ public class Command {
      * @param task the task to add
      */
     public Command(CommandType type, Task task) {
-        this(type, null, task);
+        this(type, null, task, null);
+    }
+
+    /**
+     * Creates a command that searches task descriptions for a keyword.
+     *
+     * @param type the kind of command
+     * @param keyword the keyword to search for
+     */
+    public Command(CommandType type, String keyword) {
+        this(type, null, null, keyword);
     }
 
     /**
@@ -54,11 +67,13 @@ public class Command {
      * @param type the kind of command
      * @param taskIndex the referenced task index, if any
      * @param task the new task, if any
+     * @param keyword the search keyword, if any
      */
-    private Command(CommandType type, Integer taskIndex, Task task) {
+    private Command(CommandType type, Integer taskIndex, Task task, String keyword) {
         this.type = type;
         this.taskIndex = taskIndex;
         this.task = task;
+        this.keyword = keyword;
     }
 
     /**
@@ -86,5 +101,14 @@ public class Command {
      */
     public Task getTask() {
         return task;
+    }
+
+    /**
+     * Returns the search keyword carried by this command.
+     *
+     * @return the search keyword, or {@code null} when not applicable
+     */
+    public String getKeyword() {
+        return keyword;
     }
 }

@@ -51,3 +51,20 @@ The task is displayed as:
 Use `list` to view all tasks. Use `mark 1` or `unmark 1` to change the
 completion status of the first task in the list. Use `delete 1` to remove the
 first task from the list.
+
+## Finding tasks
+
+Use `find` followed by a keyword to view tasks whose descriptions contain that
+keyword. Searches are case-insensitive:
+
+```
+find book
+```
+
+Damien displays the matching tasks in their original order:
+
+```
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][X] return book (by: June 6th)
+```

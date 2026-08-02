@@ -1,3 +1,5 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +11,7 @@ public class Damien {
     private static final String LINE = "____________________________________________________________";
 
     /** The relative path used to persist Damien's task list. */
-    private static final String DATA_FILE = "./data/duke.txt";
+    private static final Path DATA_FILE = Paths.get("data", "duke.txt");
 
     /**
      * Starts Damien and processes commands until the user says goodbye.

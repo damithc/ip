@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -21,10 +20,10 @@ public class Storage {
     /**
      * Creates storage backed by the given file path.
      *
-     * @param fileName the path of the task data file
+     * @param filePath the path of the task data file
      */
-    public Storage(String fileName) {
-        this.filePath = Paths.get(fileName);
+    public Storage(Path filePath) {
+        this.filePath = filePath;
     }
 
     /**

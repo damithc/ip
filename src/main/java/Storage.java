@@ -16,6 +16,9 @@ public class Storage {
     /** The file that contains the saved task list. */
     private final Path filePath;
 
+    /** Creates task objects from saved records. */
+    private final TaskFactory taskFactory;
+
     /** The number of malformed records ignored during the most recent load. */
     private int corruptedRecordCount;
 
@@ -26,6 +29,7 @@ public class Storage {
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
+        taskFactory = new TaskFactory();
     }
 
     /**
@@ -51,7 +55,7 @@ public class Storage {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                Task task = parseTask(line);
+                Task task = taskFactory.createFromStorage(line);
                 if (task != null) {
                     tasks.add(task);
                 } else {
@@ -97,55 +101,6 @@ public class Storage {
         } catch (IOException exception) {
             throw new DamienException("Could not save tasks to " + filePath + ".");
         }
-    }
-
-    /**
-     * Converts one saved line into a task.
-     *
-     * @param line the saved task record
-     * @return the parsed task, or null when the record is invalid
-     */
-    private Task parseTask(String line) {
-        String[] fields = line.split("\\s*\\|\\s*", -1);
-        if (fields.length < 3) {
-            return null;
-        }
-
-        String type = fields[0];
-        String status = fields[1];
-        String description = fields[2];
-        if (description.isEmpty() || !(status.equals("0") || status.equals("1"))) {
-            return null;
-        }
-
-        Task task;
-        switch (type) {
-        case "T":
-            if (fields.length != 3) {
-                return null;
-            }
-            task = new Todo(description);
-            break;
-        case "D":
-            if (fields.length != 4 || fields[3].isEmpty()) {
-                return null;
-            }
-            task = new Deadline(description, fields[3]);
-            break;
-        case "E":
-            if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {
-                return null;
-            }
-            task = new Event(description, fields[3], fields[4]);
-            break;
-        default:
-            return null;
-        }
-
-        if (status.equals("1")) {
-            task.markAsDone();
-        }
-        return task;
     }
 
 }

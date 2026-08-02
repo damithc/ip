@@ -1,25 +1,57 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Runs the Damien command-line todo-list chatbot.
+ */
 public class Damien {
+    /** The separator printed around each chatbot response. */
     private static final String LINE = "____________________________________________________________";
-    private static final int MAX_TASKS = 100;
+
+    /** The command for adding a ToDo task. */
     private static final String TODO_COMMAND = "todo";
+
+    /** The prefix used to recognize a ToDo command with a description. */
     private static final String TODO_PREFIX = "todo ";
+
+    /** The command for adding a deadline task. */
     private static final String DEADLINE_COMMAND = "deadline";
+
+    /** The prefix used to recognize a deadline command with task details. */
     private static final String DEADLINE_PREFIX = "deadline ";
+
+    /** The command for adding an event task. */
     private static final String EVENT_COMMAND = "event";
+
+    /** The prefix used to recognize an event command with task details. */
     private static final String EVENT_PREFIX = "event ";
+
+    /** The command for marking a task as done. */
     private static final String MARK_COMMAND = "mark";
+
+    /** The prefix used to recognize a mark command with a task number. */
     private static final String MARK_PREFIX = "mark ";
+
+    /** The command for marking a task as not done. */
     private static final String UNMARK_COMMAND = "unmark";
+
+    /** The prefix used to recognize an unmark command with a task number. */
     private static final String UNMARK_PREFIX = "unmark ";
+
+    /** The command for deleting a task. */
     private static final String DELETE_COMMAND = "delete";
+
+    /** The prefix used to recognize a delete command with a task number. */
     private static final String DELETE_PREFIX = "delete ";
 
+    /**
+     * Starts Damien and processes commands until the user says goodbye.
+     *
+     * @param args command-line arguments, which are not used by Damien
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(LINE);
         System.out.println("Hello! I'm Damien");
@@ -37,7 +69,7 @@ public class Damien {
             }
 
             try {
-                taskCount = processCommand(command, tasks, taskCount);
+                processCommand(command, tasks);
             } catch (DamienException exception) {
                 printError(exception);
             }
@@ -46,35 +78,42 @@ public class Damien {
         }
     }
 
-    private static int processCommand(String command, Task[] tasks, int taskCount)
+    /**
+     * Parses one command and applies its change to the task list.
+     *
+     * @param command the command entered by the user
+     * @param tasks the collection of tasks being managed
+     * @throws DamienException if the command is invalid
+     */
+    private static void processCommand(String command, ArrayList<Task> tasks)
             throws DamienException {
         if (command.equals("list")) {
             System.out.println("Here are the tasks in your list:");
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + "." + tasks[i]);
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + tasks.get(i));
             }
         } else if (command.equals(MARK_COMMAND) || command.startsWith(MARK_PREFIX)) {
             int taskIndex = getTaskIndex(command, MARK_COMMAND);
-            if (isValidTaskIndex(taskIndex, taskCount)) {
-                tasks[taskIndex].markAsDone();
+            if (isValidTaskIndex(taskIndex, tasks.size())) {
+                tasks.get(taskIndex).markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  " + tasks[taskIndex]);
+                System.out.println("  " + tasks.get(taskIndex));
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
         } else if (command.equals(UNMARK_COMMAND) || command.startsWith(UNMARK_PREFIX)) {
             int taskIndex = getTaskIndex(command, UNMARK_COMMAND);
-            if (isValidTaskIndex(taskIndex, taskCount)) {
-                tasks[taskIndex].unmark();
+            if (isValidTaskIndex(taskIndex, tasks.size())) {
+                tasks.get(taskIndex).unmark();
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  " + tasks[taskIndex]);
+                System.out.println("  " + tasks.get(taskIndex));
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
         } else if (command.equals(DELETE_COMMAND) || command.startsWith(DELETE_PREFIX)) {
             int taskIndex = getTaskIndex(command, DELETE_COMMAND);
-            if (isValidTaskIndex(taskIndex, taskCount)) {
-                taskCount = deleteTask(tasks, taskCount, taskIndex);
+            if (isValidTaskIndex(taskIndex, tasks.size())) {
+                deleteTask(tasks, taskIndex);
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
@@ -83,34 +122,40 @@ public class Damien {
             if (description.isEmpty()) {
                 throw new DamienException("The description of a todo cannot be empty.");
             }
-            taskCount = addTask(tasks, taskCount, new Todo(description));
+            addTask(tasks, new Todo(description));
         } else if (command.equals(DEADLINE_COMMAND) || command.startsWith(DEADLINE_PREFIX)) {
             Task deadline = parseDeadline(command.substring(DEADLINE_COMMAND.length()).trim());
-            taskCount = addTask(tasks, taskCount, deadline);
+            addTask(tasks, deadline);
         } else if (command.equals(EVENT_COMMAND) || command.startsWith(EVENT_PREFIX)) {
             Task event = parseEvent(command.substring(EVENT_COMMAND.length()).trim());
-            taskCount = addTask(tasks, taskCount, event);
+            addTask(tasks, event);
         } else {
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
         }
-
-        return taskCount;
     }
 
-    private static int deleteTask(Task[] tasks, int taskCount, int taskIndex) {
-        Task deletedTask = tasks[taskIndex];
-        for (int i = taskIndex; i < taskCount - 1; i++) {
-            tasks[i] = tasks[i + 1];
-        }
-        tasks[taskCount - 1] = null;
-        taskCount--;
+    /**
+     * Removes the selected task and reports the updated list size.
+     *
+     * @param tasks the collection of tasks being managed
+     * @param taskIndex the zero-based index of the task to remove
+     */
+    private static void deleteTask(ArrayList<Task> tasks, int taskIndex) {
+        Task deletedTask = tasks.remove(taskIndex);
 
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + deletedTask);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
+    /**
+     * Converts the one-based task number entered by the user to a zero-based index.
+     *
+     * @param command the command containing the task number
+     * @param commandName the command name used in error messages
+     * @return the zero-based task index
+     * @throws DamienException if the command does not contain a positive integer
+     */
     private static int getTaskIndex(String command, String commandName) throws DamienException {
         String taskNumber = command.substring(commandName.length()).trim();
         if (taskNumber.isEmpty()) {
@@ -130,15 +175,35 @@ public class Damien {
         }
     }
 
+    /**
+     * Creates the error used when a task number is outside the current list.
+     *
+     * @param taskIndex the invalid zero-based task index
+     * @return an exception describing the invalid task number
+     */
     private static DamienException invalidTaskIndexException(int taskIndex) {
         return new DamienException("Task " + (taskIndex + 1)
                 + " does not exist. Use list to see valid task numbers.");
     }
 
+    /**
+     * Checks whether a zero-based task index points to an existing task.
+     *
+     * @param taskIndex the index to check
+     * @param taskCount the current number of tasks
+     * @return true when the index is within the task list
+     */
     private static boolean isValidTaskIndex(int taskIndex, int taskCount) {
         return taskIndex >= 0 && taskIndex < taskCount;
     }
 
+    /**
+     * Parses a deadline command into a deadline task.
+     *
+     * @param command the part of the command after the word "deadline"
+     * @return the parsed deadline
+     * @throws DamienException if the description or /by field is missing
+     */
     private static Task parseDeadline(String command) throws DamienException {
         int byIndex = command.indexOf("/by");
         if (byIndex < 0) {
@@ -159,6 +224,13 @@ public class Damien {
         return new Deadline(description, by);
     }
 
+    /**
+     * Parses an event command into an event task.
+     *
+     * @param command the part of the command after the word "event"
+     * @return the parsed event
+     * @throws DamienException if the description, /from field, or /to field is missing
+     */
     private static Task parseEvent(String command) throws DamienException {
         int fromIndex = command.indexOf("/from");
         int toIndex = command.indexOf("/to", fromIndex + "/from".length());
@@ -189,20 +261,24 @@ public class Damien {
         return new Event(description, from, to);
     }
 
-    private static int addTask(Task[] tasks, int taskCount, Task task) throws DamienException {
-        if (taskCount >= MAX_TASKS) {
-            throw new DamienException("The task list is full; it can contain at most "
-                    + MAX_TASKS + " tasks.");
-        }
-
-        tasks[taskCount] = task;
-        taskCount++;
+    /**
+     * Adds a task to the collection and reports the updated list size.
+     *
+     * @param tasks the collection of tasks being managed
+     * @param task the task to add
+     */
+    private static void addTask(ArrayList<Task> tasks, Task task) {
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
+    /**
+     * Prints a user-friendly error message for a rejected command.
+     *
+     * @param exception the error raised while processing the command
+     */
     private static void printError(DamienException exception) {
         System.out.println(" OOPS!!! " + exception.getMessage());
     }

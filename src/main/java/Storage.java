@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 /**
  * Loads and saves Damien's task list in a text file.
@@ -17,6 +16,9 @@ public class Storage {
     /** The file that contains the saved task list. */
     private final Path filePath;
 
+    /** Creates task objects from saved records. */
+    private final TaskFactory taskFactory;
+
     /** The number of malformed records ignored during the most recent load. */
     private int corruptedRecordCount;
 
@@ -27,6 +29,7 @@ public class Storage {
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
+        taskFactory = new TaskFactory();
     }
 
     /**
@@ -39,8 +42,8 @@ public class Storage {
      * @return the tasks read from the data file
      * @throws DamienException if the data file cannot be read
      */
-    public ArrayList<Task> load() throws DamienException {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList load() throws DamienException {
+        TaskList tasks = new TaskList();
         corruptedRecordCount = 0;
         if (!Files.exists(filePath)) {
             return tasks;
@@ -52,7 +55,7 @@ public class Storage {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                Task task = parseTask(line);
+                Task task = taskFactory.createFromStorage(line);
                 if (task != null) {
                     tasks.add(task);
                 } else {
@@ -82,7 +85,7 @@ public class Storage {
      * @param tasks the tasks to save
      * @throws DamienException if the data file cannot be written
      */
-    public void save(ArrayList<Task> tasks) throws DamienException {
+    public void save(TaskList tasks) throws DamienException {
         try {
             Path parentDirectory = filePath.getParent();
             if (parentDirectory != null) {
@@ -90,8 +93,8 @@ public class Storage {
             }
 
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                for (Task task : tasks) {
-                    writer.write(formatTask(task));
+                for (int i = 0; i < tasks.size(); i++) {
+                    writer.write(tasks.get(i).toStorageString());
                     writer.newLine();
                 }
             }
@@ -100,72 +103,4 @@ public class Storage {
         }
     }
 
-    /**
-     * Converts one saved line into a task.
-     *
-     * @param line the saved task record
-     * @return the parsed task, or null when the record is invalid
-     */
-    private Task parseTask(String line) {
-        String[] fields = line.split("\\s*\\|\\s*", -1);
-        if (fields.length < 3) {
-            return null;
-        }
-
-        String type = fields[0];
-        String status = fields[1];
-        String description = fields[2];
-        if (description.isEmpty() || !(status.equals("0") || status.equals("1"))) {
-            return null;
-        }
-
-        Task task;
-        switch (type) {
-        case "T":
-            if (fields.length != 3) {
-                return null;
-            }
-            task = new Todo(description);
-            break;
-        case "D":
-            if (fields.length != 4 || fields[3].isEmpty()) {
-                return null;
-            }
-            task = new Deadline(description, fields[3]);
-            break;
-        case "E":
-            if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {
-                return null;
-            }
-            task = new Event(description, fields[3], fields[4]);
-            break;
-        default:
-            return null;
-        }
-
-        if (status.equals("1")) {
-            task.markAsDone();
-        }
-        return task;
-    }
-
-    /**
-     * Converts a task into its one-line file representation.
-     *
-     * @param task the task to format
-     * @return the saved task record
-     */
-    private String formatTask(Task task) {
-        String status = task.isDone() ? "1" : "0";
-        if (task instanceof Deadline) {
-            Deadline deadline = (Deadline) task;
-            return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
-        }
-        if (task instanceof Event) {
-            Event event = (Event) task;
-            return "E | " + status + " | " + task.getDescription() + " | "
-                    + event.getFrom() + " | " + event.getTo();
-        }
-        return "T | " + status + " | " + task.getDescription();
-    }
 }

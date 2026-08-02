@@ -3,7 +3,7 @@
  */
 public class Deadline extends Task {
     /** The date or time by which this task should be completed. */
-    protected String by;
+    private String by;
 
     /**
      * Creates a deadline task.
@@ -23,6 +23,12 @@ public class Deadline extends Task {
      */
     public String getBy() {
         return by;
+    }
+
+    @Override
+    public String toStorageString() {
+        String status = isDone() ? "1" : "0";
+        return "D | " + status + " | " + getDescription() + " | " + by;
     }
 
     @Override

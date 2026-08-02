@@ -1,29 +1,24 @@
 /**
  * Executes non-termination commands after they have been entered by the user.
  *
- * <p>This class coordinates parsing, task-list changes, persistence, and
- * responses for one running Damien application.</p>
+ * <p>This class routes parsed commands and coordinates user-facing responses
+ * for one running Damien application.</p>
  */
 public class CommandHandler {
-    /** The task list changed by commands. */
-    private final TaskList tasks;
-
-    /** Saves task-list changes to the data file. */
-    private final Storage storage;
+    /** Performs task changes and saves the updated list. */
+    private final TaskService taskService;
 
     /** Displays command results and errors to the user. */
     private final Ui ui;
 
     /**
-     * Creates a command handler using the given application collaborators.
+     * Creates a command handler using the given task service and interface.
      *
-     * @param tasks the task list to change
-     * @param storage the storage used to save changes
+     * @param taskService the service used to change and persist tasks
      * @param ui the user interface used to show results
      */
-    public CommandHandler(TaskList tasks, Storage storage, Ui ui) {
-        this.tasks = tasks;
-        this.storage = storage;
+    public CommandHandler(TaskService taskService, Ui ui) {
+        this.taskService = taskService;
         this.ui = ui;
     }
 
@@ -36,42 +31,19 @@ public class CommandHandler {
     public void handle(Command command) throws DamienException {
         switch (command.getType()) {
         case LIST:
-            ui.showTaskList(tasks);
+            ui.showTaskList(taskService.getTasks());
             break;
         case MARK:
-            int taskIndex = command.getTaskIndex();
-            if (tasks.isValidIndex(taskIndex)) {
-                tasks.markAsDone(taskIndex);
-                storage.save(tasks);
-                ui.showTaskMarkedAsDone(tasks.get(taskIndex));
-            } else {
-                throw invalidTaskIndexException(taskIndex);
-            }
+            ui.showTaskMarkedAsDone(taskService.markAsDone(command.getTaskIndex()));
             break;
         case UNMARK:
-            taskIndex = command.getTaskIndex();
-            if (tasks.isValidIndex(taskIndex)) {
-                tasks.unmark(taskIndex);
-                storage.save(tasks);
-                ui.showTaskUnmarked(tasks.get(taskIndex));
-            } else {
-                throw invalidTaskIndexException(taskIndex);
-            }
+            ui.showTaskUnmarked(taskService.unmark(command.getTaskIndex()));
             break;
         case DELETE:
-            taskIndex = command.getTaskIndex();
-            if (tasks.isValidIndex(taskIndex)) {
-                deleteTask(taskIndex);
-            } else {
-                throw invalidTaskIndexException(taskIndex);
-            }
+            deleteTask(command.getTaskIndex());
             break;
         case TODO:
-            addTask(command.getTask());
-            break;
         case DEADLINE:
-            addTask(command.getTask());
-            break;
         case EVENT:
             addTask(command.getTask());
             break;
@@ -86,21 +58,8 @@ public class CommandHandler {
      * @param taskIndex the zero-based index of the task to remove
      */
     private void deleteTask(int taskIndex) throws DamienException {
-        Task deletedTask = tasks.remove(taskIndex);
-        storage.save(tasks);
-
-        ui.showTaskDeleted(deletedTask, tasks.size());
-    }
-
-    /**
-     * Creates the error used when a task number is outside the current list.
-     *
-     * @param taskIndex the invalid zero-based task index
-     * @return an exception describing the invalid task number
-     */
-    private DamienException invalidTaskIndexException(int taskIndex) {
-        return new DamienException("Task " + (taskIndex + 1)
-                + " does not exist. Use list to see valid task numbers.");
+        Task deletedTask = taskService.delete(taskIndex);
+        ui.showTaskDeleted(deletedTask, taskService.size());
     }
 
     /**
@@ -109,8 +68,7 @@ public class CommandHandler {
      * @param task the task to add
      */
     private void addTask(Task task) throws DamienException {
-        tasks.add(task);
-        storage.save(tasks);
-        ui.showTaskAdded(task, tasks.size());
+        taskService.add(task);
+        ui.showTaskAdded(task, taskService.size());
     }
 }

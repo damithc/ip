@@ -23,6 +23,9 @@ public class Damien {
     /** Stores the tasks managed during this run. */
     private TaskList tasks;
 
+    /** Performs task changes and persistence for parsed commands. */
+    private final TaskService taskService;
+
     /** Executes commands using Damien's collaborators. */
     private final CommandHandler commandHandler;
 
@@ -41,7 +44,8 @@ public class Damien {
             ui.showError(exception);
             tasks = new TaskList();
         }
-        commandHandler = new CommandHandler(tasks, storage, ui);
+        taskService = new TaskService(tasks, storage);
+        commandHandler = new CommandHandler(taskService, ui);
     }
 
     /**

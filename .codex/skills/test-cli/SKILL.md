@@ -5,6 +5,14 @@ description: Test this project's Java CLI from the ordered cases in tests/test-p
 
 # Test CLI
 
+All future Java source and test code for this project must follow the
+`se-edu-java-coding-standard` skill. Apply its basic and intermediate rules by
+default; use its advanced rules only when explicitly requested.
+
+When creating or proposing a commit message for this project, follow the
+`craft-commit-message` skill. Every commit message must include an imperative
+subject and a detailed body explaining what changed and why.
+
 Run the current CLI against the ordered cases in `tests/test-plan.md` and show
 a reproducible input/output record. The plan is the source of truth for the
 inputs and per-case output assertions. Treat the executable output as

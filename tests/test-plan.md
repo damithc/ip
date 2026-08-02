@@ -83,8 +83,42 @@ the response for that row.
 ## Pass criteria
 
 The script reports `PASS` only when compilation succeeds, the startup greeting
-is present, every response contains all of its expected output fragments,
-Damien exits with status 0, and all 38 inputs complete. At the first missing
-output fragment, it stops before sending later inputs and reports the expected
-fragments alongside the actual response. Any compiler, runtime, or
-missing-output failure means that the test run did not pass.
+is present in every session, every response contains all of its expected output
+fragments, Damien exits with status 0, and all 38 main-session inputs plus the
+11 persistence-session inputs and the 2 corrupted-data inputs complete. At the first missing output fragment,
+it stops before sending later inputs and reports the expected fragments
+alongside the actual response. Any compiler, runtime, or missing-output failure
+means that the test run did not pass.
+
+## Persistence test cases in execution order
+
+These cases run in four fresh Damien processes after the main session. All
+processes use the same temporary runtime directory, so each process must load
+the tasks saved by the previous one. Together they cover saving and loading
+ToDos, deadlines, and events, as well as add, mark, delete, and unmark changes.
+
+| Session | Order | Input | Expected output fragments |
+| --- | --- | --- | --- |
+| 1 | 1 | `event planning /from Mon 2pm /to 4pm` | `[E][ ] planning (from: Mon 2pm to: 4pm)`; `Now you have 3 tasks in the list.` |
+| 1 | 2 | `mark 1` | `[T][X] borrow book`; `Nice! I've marked this task as done:` |
+| 1 | 3 | `bye` | `Bye. Hope to see you again soon!` |
+| 2 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] planning (from: Mon 2pm to: 4pm)` |
+| 2 | 2 | `delete 3` | `[E][ ] planning (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
+| 2 | 3 | `bye` | `Bye. Hope to see you again soon!` |
+| 3 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 3 | 2 | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
+| 3 | 3 | `bye` | `Bye. Hope to see you again soon!` |
+| 4 | 1 | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 4 | 2 | `bye` | `Bye. Hope to see you again soon!` |
+
+## Corrupted data test cases
+
+The test runner creates a separate temporary runtime with two valid records
+and two malformed records before starting Damien. Damien must warn about the
+malformed records, keep the valid records, and continue accepting commands.
+The startup output must contain `Warning: I found 2 invalid saved task records and skipped them.`
+
+| Order | Input | Expected output fragments |
+| --- | --- | --- |
+| 1 | `list` | `1.[T][ ] keep this task`; `2.[D][ ] return book (by: Sunday)` |
+| 2 | `bye` | `Bye. Hope to see you again soon!` |

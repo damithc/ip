@@ -49,4 +49,5 @@ The task is displayed as:
 ## Viewing and updating tasks
 
 Use `list` to view all tasks. Use `mark 1` or `unmark 1` to change the
-completion status of the first task in the list.
+completion status of the first task in the list. Use `delete 1` to remove the
+first task from the list.

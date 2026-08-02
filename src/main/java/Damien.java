@@ -13,6 +13,8 @@ public class Damien {
     private static final String MARK_PREFIX = "mark ";
     private static final String UNMARK_COMMAND = "unmark";
     private static final String UNMARK_PREFIX = "unmark ";
+    private static final String DELETE_COMMAND = "delete";
+    private static final String DELETE_PREFIX = "delete ";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -69,6 +71,13 @@ public class Damien {
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
+        } else if (command.equals(DELETE_COMMAND) || command.startsWith(DELETE_PREFIX)) {
+            int taskIndex = getTaskIndex(command, DELETE_COMMAND);
+            if (isValidTaskIndex(taskIndex, taskCount)) {
+                taskCount = deleteTask(tasks, taskCount, taskIndex);
+            } else {
+                throw invalidTaskIndexException(taskIndex);
+            }
         } else if (command.equals(TODO_COMMAND) || command.startsWith(TODO_PREFIX)) {
             String description = command.substring(TODO_COMMAND.length()).trim();
             if (description.isEmpty()) {
@@ -85,6 +94,20 @@ public class Damien {
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
         }
 
+        return taskCount;
+    }
+
+    private static int deleteTask(Task[] tasks, int taskCount, int taskIndex) {
+        Task deletedTask = tasks[taskIndex];
+        for (int i = taskIndex; i < taskCount - 1; i++) {
+            tasks[i] = tasks[i + 1];
+        }
+        tasks[taskCount - 1] = null;
+        taskCount--;
+
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + deletedTask);
+        System.out.println("Now you have " + taskCount + " tasks in the list.");
         return taskCount;
     }
 

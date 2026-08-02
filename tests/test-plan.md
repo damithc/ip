@@ -23,8 +23,9 @@ The runner:
 3. Starts `Damien` and sends the inputs below, one line at a time, in a
    single process.
 4. Prints the actual output next to the input that produced it.
-5. Checks each response against that test case's expected output fragments,
-   checks the startup greeting, and requires a normal exit.
+5. Checks each response against that test case's expected output fragments as
+   soon as it is produced, stopping immediately at the first failed case.
+6. Checks the startup greeting and requires a normal exit when all cases pass.
 
 The executable's output is authoritative. The expected output fragments below
 are assertions used to detect regressions; the AI reports the actual wording,
@@ -71,11 +72,19 @@ the response for that row.
 | 29 | Negative | `unmark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
 | 30 | Positive | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
 | 31 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
-| 32 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
+| 32 | Negative | `delete` | ` OOPS!!! Please provide a task number after delete, for example: delete 1.` |
+| 33 | Negative | `delete abc` | ` OOPS!!! The task number after delete must be a positive integer, for example: delete 1.` |
+| 34 | Negative | `delete 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
+| 35 | Negative | `delete 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
+| 36 | Positive | `delete 3` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
+| 37 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 38 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
 
 ## Pass criteria
 
 The script reports `PASS` only when compilation succeeds, the startup greeting
 is present, every response contains all of its expected output fragments,
-Damien exits with status 0, and all 32 inputs complete. Any compiler, runtime,
-or missing-output failure means that the test run did not pass.
+Damien exits with status 0, and all 38 inputs complete. At the first missing
+output fragment, it stops before sending later inputs and reports the expected
+fragments alongside the actual response. Any compiler, runtime, or
+missing-output failure means that the test run did not pass.

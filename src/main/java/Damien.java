@@ -32,6 +32,9 @@ public class Damien {
         System.out.println(LINE);
         System.out.println("Hello! I'm Damien");
         System.out.println("What can I do for you?");
+        if (storage.getCorruptedRecordCount() > 0) {
+            printCorruptionWarning(storage.getCorruptedRecordCount());
+        }
         System.out.println(LINE);
 
         while (scanner.hasNextLine()) {
@@ -279,5 +282,17 @@ public class Damien {
      */
     private static void printError(DamienException exception) {
         System.out.println(" OOPS!!! " + exception.getMessage());
+    }
+
+    /**
+     * Tells the user that invalid saved records were skipped during startup.
+     *
+     * @param corruptedRecordCount the number of records that were skipped
+     */
+    private static void printCorruptionWarning(int corruptedRecordCount) {
+        String recordLabel = corruptedRecordCount == 1 ? "record" : "records";
+        String pronoun = corruptedRecordCount == 1 ? "it" : "them";
+        System.out.println("Warning: I found " + corruptedRecordCount
+                + " invalid saved task " + recordLabel + " and skipped " + pronoun + ".");
     }
 }

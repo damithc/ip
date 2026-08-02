@@ -17,6 +17,9 @@ public class Storage {
     /** The file that contains the saved task list. */
     private final Path filePath;
 
+    /** The number of malformed records ignored during the most recent load. */
+    private int corruptedRecordCount;
+
     /**
      * Creates storage backed by the given file path.
      *
@@ -38,6 +41,7 @@ public class Storage {
      */
     public ArrayList<Task> load() throws DamienException {
         ArrayList<Task> tasks = new ArrayList<>();
+        corruptedRecordCount = 0;
         if (!Files.exists(filePath)) {
             return tasks;
         }
@@ -45,15 +49,29 @@ public class Storage {
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 Task task = parseTask(line);
                 if (task != null) {
                     tasks.add(task);
+                } else {
+                    corruptedRecordCount++;
                 }
             }
         } catch (IOException exception) {
             throw new DamienException("Could not load tasks from " + filePath + ".");
         }
         return tasks;
+    }
+
+    /**
+     * Returns how many malformed records were ignored during the most recent load.
+     *
+     * @return the number of corrupted records skipped during loading
+     */
+    public int getCorruptedRecordCount() {
+        return corruptedRecordCount;
     }
 
     /**

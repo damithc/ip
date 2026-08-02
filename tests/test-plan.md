@@ -85,7 +85,7 @@ the response for that row.
 The script reports `PASS` only when compilation succeeds, the startup greeting
 is present in every session, every response contains all of its expected output
 fragments, Damien exits with status 0, and all 38 main-session inputs plus the
-11 persistence-session inputs complete. At the first missing output fragment,
+11 persistence-session inputs and the 2 corrupted-data inputs complete. At the first missing output fragment,
 it stops before sending later inputs and reports the expected fragments
 alongside the actual response. Any compiler, runtime, or missing-output failure
 means that the test run did not pass.
@@ -110,3 +110,15 @@ ToDos, deadlines, and events, as well as add, mark, delete, and unmark changes.
 | 3 | 3 | `bye` | `Bye. Hope to see you again soon!` |
 | 4 | 1 | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
 | 4 | 2 | `bye` | `Bye. Hope to see you again soon!` |
+
+## Corrupted data test cases
+
+The test runner creates a separate temporary runtime with two valid records
+and two malformed records before starting Damien. Damien must warn about the
+malformed records, keep the valid records, and continue accepting commands.
+The startup output must contain `Warning: I found 2 invalid saved task records and skipped them.`
+
+| Order | Input | Expected output fragments |
+| --- | --- | --- |
+| 1 | `list` | `1.[T][ ] keep this task`; `2.[D][ ] return book (by: Sunday)` |
+| 2 | `bye` | `Bye. Hope to see you again soon!` |

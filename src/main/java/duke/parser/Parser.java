@@ -121,20 +121,25 @@ public class Parser {
         int byIndex = command.indexOf("/by");
         if (byIndex < 0) {
             throw new DamienException("A deadline needs a /by field, for example: "
-                    + "deadline return book /by Sunday.");
+                    + "deadline return book /by 2019-10-15.");
         }
 
         String description = command.substring(0, byIndex).trim();
         String by = command.substring(byIndex + "/by".length()).trim();
         if (description.isEmpty()) {
             throw new DamienException("A deadline needs a description before /by, for example: "
-                    + "deadline return book /by Sunday.");
+                    + "deadline return book /by 2019-10-15.");
         }
         if (by.isEmpty()) {
             throw new DamienException("A deadline needs a date or time after /by, for example: "
-                    + "deadline return book /by Sunday.");
+                    + "deadline return book /by 2019-10-15.");
         }
-        return new Deadline(description, by);
+        try {
+            return new Deadline(description, by);
+        } catch (IllegalArgumentException exception) {
+            throw new DamienException("A deadline date must use yyyy-MM-dd, optionally followed by HHmm, "
+                    + "or d/M/yyyy HHmm, for example: deadline return book /by 2019-10-15.");
+        }
     }
 
     /**

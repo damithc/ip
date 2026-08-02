@@ -43,7 +43,11 @@ public class TaskFactory {
             if (fields.length != 4 || fields[3].isEmpty()) {
                 return null;
             }
-            task = new Deadline(description, fields[3]);
+            try {
+                task = new Deadline(description, fields[3]);
+            } catch (IllegalArgumentException exception) {
+                return null;
+            }
             break;
         case "E":
             if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {

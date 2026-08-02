@@ -3,6 +3,7 @@ package duke.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import duke.exception.DamienException;
 import duke.task.Deadline;
@@ -35,7 +36,7 @@ public class StorageTest {
         Storage storage = new Storage(file);
         TaskList tasks = new TaskList();
         Todo todo = new Todo("read book");
-        Deadline deadline = new Deadline("return book", "Sunday");
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 12, 2));
         Event event = new Event("project meeting", "Mon 2pm", "4pm");
         deadline.markAsDone();
         tasks.add(todo);
@@ -79,7 +80,7 @@ public class StorageTest {
         Files.writeString(file, String.join(System.lineSeparator(),
                 "T | 0 | keep this task",
                 "invalid record",
-                "D | 1 | return book | Sunday",
+                "D | 1 | return book | 2019-12-02",
                 "E | 0 | project meeting | Mon 2pm | 4pm",
                 "T | 0 | ") + System.lineSeparator());
         Storage storage = new Storage(file);

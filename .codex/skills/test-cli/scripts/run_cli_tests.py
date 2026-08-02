@@ -21,7 +21,7 @@ CORRUPTED_DATA = "\n".join(
     (
         "T | 0 | keep this task",
         "corrupted record",
-        "D | 0 | return book | Sunday",
+        "D | 0 | return book | 2019-12-02",
         "E | invalid | project meeting | Mon 2pm | 4pm",
     )
 ) + "\n"

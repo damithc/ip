@@ -18,18 +18,32 @@ Damien displays the new task as follows:
 
 ## Adding a deadline
 
-Use `/by` to separate the task description from the date or time. Dates and
-times are kept as text, so you can use formats such as `Sunday` or `11/10/2019
-5pm`:
+Use `/by` to separate the task description from the deadline. Damien stores
+the deadline as a date and displays it in a friendlier format. Use
+`yyyy-MM-dd` for a date, or add a 24-hour time in `HHmm` format:
 
 ```
-deadline return book /by Sunday
+deadline return book /by 2019-12-02
 ```
 
 The task is displayed as:
 
 ```
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 2 2019)
+```
+
+Deadlines can include a time. Damien accepts both the ISO-style date and the
+original day/month/year form:
+
+```
+deadline return book /by 2019-12-02 1800
+deadline submit report /by 2/12/2019 1800
+```
+
+The second task is displayed as:
+
+```
+[D][ ] submit report (by: Dec 2 2019, 6:00 PM)
 ```
 
 ## Adding an event
@@ -66,5 +80,5 @@ Damien displays the matching tasks in their original order:
 ```
 Here are the matching tasks in your list:
 1.[T][ ] read book
-2.[D][X] return book (by: June 6th)
+2.[D][X] return book (by: Jun 6 2019)
 ```

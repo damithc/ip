@@ -15,8 +15,8 @@ import duke.task.TaskList;
  *
  * <p>Each task is stored on one line. The first field identifies the task
  * type, the second field stores completion as {@code 1} or {@code 0}, and the
- * remaining fields store the task data. For example, a deadline is stored as
- * {@code D | 0 | return book | Sunday}.</p>
+ * remaining fields store the task data. For example, a date-only deadline is
+ * stored as {@code D | 0 | return book | 2019-12-02}.</p>
  */
 public class Storage {
     /** The file that contains the saved task list. */

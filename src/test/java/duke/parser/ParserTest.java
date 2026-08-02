@@ -1,5 +1,7 @@
 package duke.parser;
 
+import java.time.LocalDateTime;
+
 import duke.command.Command;
 import duke.command.CommandType;
 import duke.exception.DamienException;
@@ -41,12 +43,41 @@ public class ParserTest {
      */
     @Test
     public void parseDeadlineCommandExtractsDeadlineDetails() throws DamienException {
-        Command command = parser.parse("deadline return book /by Sunday");
+        Command command = parser.parse("deadline return book /by 2019-12-02");
 
         assertEquals(CommandType.DEADLINE, command.getType());
         Deadline deadline = assertInstanceOf(Deadline.class, command.getTask());
         assertEquals("return book", deadline.getDescription());
-        assertEquals("Sunday", deadline.getBy());
+        assertEquals(LocalDateTime.of(2019, 12, 2, 0, 0), deadline.getBy());
+        assertEquals("[D][ ] return book (by: Dec 2 2019)", deadline.toString());
+    }
+
+    /**
+     * Verifies that a deadline command also accepts the original date-and-time example.
+     *
+     * @throws DamienException if the valid command cannot be parsed
+     */
+    @Test
+    public void parseDeadlineCommandExtractsDateAndTime() throws DamienException {
+        Command command = parser.parse("deadline return book /by 2/12/2019 1800");
+
+        Deadline deadline = assertInstanceOf(Deadline.class, command.getTask());
+
+        assertEquals(LocalDateTime.of(2019, 12, 2, 18, 0), deadline.getBy());
+        assertEquals("[D][ ] return book (by: Dec 2 2019, 6:00 PM)", deadline.toString());
+    }
+
+    /**
+     * Verifies that an invalid deadline date is rejected with a useful message.
+     */
+    @Test
+    public void parseDeadlineCommandRejectsInvalidDate() {
+        DamienException exception = assertThrows(DamienException.class,
+                () -> parser.parse("deadline return book /by 2019-02-30"));
+
+        assertEquals("A deadline date must use yyyy-MM-dd, optionally followed by HHmm, "
+                + "or d/M/yyyy HHmm, for example: deadline return book /by 2019-10-15.",
+                exception.getMessage());
     }
 
     /**

@@ -46,12 +46,12 @@ the response for that row.
 | 3 | Positive | `todo borrow book` | `[T][ ] borrow book`; `Now you have 1 tasks in the list.` |
 | 4 | Negative | `todo` | ` OOPS!!! The description of a todo cannot be empty.` |
 | 5 | Positive state check | `list` | `1.[T][ ] borrow book` |
-| 6 | Negative | `deadline` | ` OOPS!!! A deadline needs a /by field, for example: deadline return book /by Sunday.` |
-| 7 | Positive | `deadline return book /by Sunday` | `[D][ ] return book (by: Sunday)`; `Now you have 2 tasks in the list.` |
-| 8 | Negative | `deadline return book` | ` OOPS!!! A deadline needs a /by field, for example: deadline return book /by Sunday.` |
-| 9 | Negative | `deadline /by Sunday` | ` OOPS!!! A deadline needs a description before /by, for example: deadline return book /by Sunday.` |
-| 10 | Negative | `deadline return book /by` | ` OOPS!!! A deadline needs a date or time after /by, for example: deadline return book /by Sunday.` |
-| 11 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 6 | Negative | `deadline` | ` OOPS!!! A deadline needs a /by field, for example: deadline return book /by 2019-10-15.` |
+| 7 | Positive | `deadline return book /by 2/12/2019 1800` | `[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `Now you have 2 tasks in the list.` |
+| 8 | Negative | `deadline return book` | ` OOPS!!! A deadline needs a /by field, for example: deadline return book /by 2019-10-15.` |
+| 9 | Negative | `deadline /by 2019-12-02` | ` OOPS!!! A deadline needs a description before /by, for example: deadline return book /by 2019-10-15.` |
+| 10 | Negative | `deadline return book /by` | ` OOPS!!! A deadline needs a date or time after /by, for example: deadline return book /by 2019-10-15.` |
+| 11 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
 | 12 | Negative | `event` | ` OOPS!!! An event needs a /from field, for example: event meeting /from 2pm /to 4pm.` |
 | 13 | Positive | `event project meeting /from Mon 2pm /to 4pm` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 3 tasks in the list.` |
 | 14 | Negative | `event project meeting /to 4pm` | ` OOPS!!! An event needs a /from field, for example: event meeting /from 2pm /to 4pm.` |
@@ -59,28 +59,28 @@ the response for that row.
 | 16 | Negative | `event /from Mon 2pm /to 4pm` | ` OOPS!!! An event needs a description before /from, for example: event meeting /from 2pm /to 4pm.` |
 | 17 | Negative | `event project meeting /from /to 4pm` | ` OOPS!!! An event needs a start time after /from, for example: event meeting /from 2pm /to 4pm.` |
 | 18 | Negative | `event project meeting /from Mon 2pm /to` | ` OOPS!!! An event needs an end time after /to, for example: event meeting /from 2pm /to 4pm.` |
-| 19 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
-| 20 | Positive | `find book` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
-| 21 | Positive | `find BOOK` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 19 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
+| 20 | Positive | `find book` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
+| 21 | Positive | `find BOOK` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
 | 22 | Negative | `find` | ` OOPS!!! Please provide a keyword after find, for example: find book.` |
 | 23 | Negative | `mark` | ` OOPS!!! Please provide a task number after mark, for example: mark 1.` |
 | 24 | Negative | `mark abc` | ` OOPS!!! The task number after mark must be a positive integer, for example: mark 1.` |
 | 25 | Negative | `mark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
 | 26 | Negative | `mark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
 | 27 | Positive | `mark 1` | `[T][X] borrow book`; `Nice! I've marked this task as done:` |
-| 28 | Positive state check | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
+| 28 | Positive state check | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
 | 29 | Negative | `unmark` | ` OOPS!!! Please provide a task number after unmark, for example: unmark 1.` |
 | 30 | Negative | `unmark abc` | ` OOPS!!! The task number after unmark must be a positive integer, for example: unmark 1.` |
 | 31 | Negative | `unmark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
 | 32 | Negative | `unmark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
 | 33 | Positive | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
-| 34 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
+| 34 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
 | 35 | Negative | `delete` | ` OOPS!!! Please provide a task number after delete, for example: delete 1.` |
 | 36 | Negative | `delete abc` | ` OOPS!!! The task number after delete must be a positive integer, for example: delete 1.` |
 | 37 | Negative | `delete 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
 | 38 | Negative | `delete 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
 | 39 | Positive | `delete 3` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
-| 40 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 40 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
 | 41 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
 
 ## Pass criteria
@@ -105,13 +105,13 @@ ToDos, deadlines, and events, as well as add, mark, delete, and unmark changes.
 | 1 | 1 | `event planning /from Mon 2pm /to 4pm` | `[E][ ] planning (from: Mon 2pm to: 4pm)`; `Now you have 3 tasks in the list.` |
 | 1 | 2 | `mark 1` | `[T][X] borrow book`; `Nice! I've marked this task as done:` |
 | 1 | 3 | `bye` | `Bye. Hope to see you again soon!` |
-| 2 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] planning (from: Mon 2pm to: 4pm)` |
+| 2 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `3.[E][ ] planning (from: Mon 2pm to: 4pm)` |
 | 2 | 2 | `delete 3` | `[E][ ] planning (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
 | 2 | 3 | `bye` | `Bye. Hope to see you again soon!` |
-| 3 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 3 | 1 | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
 | 3 | 2 | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
 | 3 | 3 | `bye` | `Bye. Hope to see you again soon!` |
-| 4 | 1 | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 4 | 1 | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
 | 4 | 2 | `bye` | `Bye. Hope to see you again soon!` |
 
 ## Corrupted data test cases
@@ -123,5 +123,5 @@ The startup output must contain `Warning: I found 2 invalid saved task records a
 
 | Order | Input | Expected output fragments |
 | --- | --- | --- |
-| 1 | `list` | `1.[T][ ] keep this task`; `2.[D][ ] return book (by: Sunday)` |
+| 1 | `list` | `1.[T][ ] keep this task`; `2.[D][ ] return book (by: Dec 2 2019)` |
 | 2 | `bye` | `Bye. Hope to see you again soon!` |

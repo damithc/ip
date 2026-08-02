@@ -1,5 +1,7 @@
 package duke.storage;
 
+import java.time.LocalDateTime;
+
 import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Task;
@@ -37,12 +39,24 @@ public class TaskFactoryTest {
      */
     @Test
     public void createFromStorageCreatesCompletedDeadline() {
-        Task task = taskFactory.createFromStorage("D | 1 | return book | Sunday");
+        Task task = taskFactory.createFromStorage("D | 1 | return book | 2019-12-02");
 
         Deadline deadline = assertInstanceOf(Deadline.class, task);
         assertEquals("return book", deadline.getDescription());
-        assertEquals("Sunday", deadline.getBy());
+        assertEquals(LocalDateTime.of(2019, 12, 2, 0, 0), deadline.getBy());
         assertTrue(deadline.isDone());
+    }
+
+    /**
+     * Verifies that a stored deadline with a time preserves the typed value and formatting.
+     */
+    @Test
+    public void createFromStorageCreatesDeadlineWithTime() {
+        Task task = taskFactory.createFromStorage("D | 0 | return book | 2019-12-02 1800");
+
+        Deadline deadline = assertInstanceOf(Deadline.class, task);
+        assertEquals(LocalDateTime.of(2019, 12, 2, 18, 0), deadline.getBy());
+        assertEquals("D | 0 | return book | 2019-12-02 1800", deadline.toStorageString());
     }
 
     /**
@@ -68,6 +82,7 @@ public class TaskFactoryTest {
                 () -> assertNull(taskFactory.createFromStorage("invalid record")),
                 () -> assertNull(taskFactory.createFromStorage("T | 2 | invalid status")),
                 () -> assertNull(taskFactory.createFromStorage("D | 0 | missing deadline | ")),
+                () -> assertNull(taskFactory.createFromStorage("D | 0 | invalid date | 2019-02-30")),
                 () -> assertNull(taskFactory.createFromStorage("E | 0 | missing end | 2pm | ")),
                 () -> assertNull(taskFactory.createFromStorage("X | 0 | unknown type"))
         );

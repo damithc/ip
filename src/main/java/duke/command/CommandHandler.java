@@ -53,7 +53,9 @@ public class CommandHandler {
             ui.showMatchingTasks(taskService.find(command.getKeyword()));
             break;
         case TODO:
+        // Fallthrough
         case DEADLINE:
+        // Fallthrough
         case EVENT:
             addTask(command.getTask());
             break;

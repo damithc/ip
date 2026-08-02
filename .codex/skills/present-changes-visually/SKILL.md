@@ -7,6 +7,10 @@ description: Generate a self-contained, GitHub-style split-view HTML page that v
 
 Generate one interactive HTML page containing every changed file as a side-by-side before/after diff. The page folds long unchanged runs, highlights changed words within modified lines, lets readers filter files, and includes collapsed panels for unchanged files.
 
+When creating or proposing a commit message for the reviewed changes, follow
+the `craft-commit-message` skill. Every commit message must include an
+imperative subject and a detailed body explaining what changed and why.
+
 ## Generate the page
 
 1. Treat the current repository as the target unless the user identifies another repository.

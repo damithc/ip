@@ -27,7 +27,9 @@ public class Parser {
 
         switch (commandType) {
         case MARK:
+        // Fallthrough
         case UNMARK:
+        // Fallthrough
         case DELETE:
             return new Command(commandType, parseTaskIndex(input, commandType));
         case FIND:

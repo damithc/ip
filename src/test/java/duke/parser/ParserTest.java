@@ -79,6 +79,33 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that a find command preserves its search keyword.
+     *
+     * @throws DamienException if the valid command cannot be parsed
+     */
+    @Test
+    public void parseFindCommandExtractsKeyword() throws DamienException {
+        Command command = parser.parse("find book");
+
+        assertEquals(CommandType.FIND, command.getType());
+        assertEquals("book", command.getKeyword());
+        assertNull(command.getTaskIndex());
+        assertNull(command.getTask());
+    }
+
+    /**
+     * Verifies that a find command requires a keyword.
+     */
+    @Test
+    public void parseFindCommandRejectsMissingKeyword() {
+        DamienException exception = assertThrows(DamienException.class,
+                () -> parser.parse("find"));
+
+        assertEquals("Please provide a keyword after find, for example: find book.",
+                exception.getMessage());
+    }
+
+    /**
      * Verifies that commands without arguments are still recognised.
      *
      * @throws DamienException if the valid command cannot be parsed

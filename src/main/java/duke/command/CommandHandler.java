@@ -49,6 +49,9 @@ public class CommandHandler {
         case DELETE:
             deleteTask(command.getTaskIndex());
             break;
+        case FIND:
+            ui.showMatchingTasks(taskService.find(command.getKeyword()));
+            break;
         case TODO:
         case DEADLINE:
         case EVENT:

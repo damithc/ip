@@ -26,6 +26,16 @@ javac -version
 The `sdk use` selection applies only to the current shell, so repeat it when
 starting a new shell for testing.
 
+## Keeping project files in sync
+
+After any code change, check whether the relevant JUnit tests,
+`tests/test-plan.md`, and `docs/README.md` need updating. Update each applicable
+file before running this CLI validation workflow.
+
+For code changes or additions within the top 30% of high-value targets, add new
+JUnit tests or update existing tests because those changes have the most value
+from continued JUnit coverage.
+
 ## Workflow
 
 1. Work from the project root and read `tests/test-plan.md`. Use its test-case

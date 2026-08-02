@@ -60,31 +60,34 @@ the response for that row.
 | 17 | Negative | `event project meeting /from /to 4pm` | ` OOPS!!! An event needs a start time after /from, for example: event meeting /from 2pm /to 4pm.` |
 | 18 | Negative | `event project meeting /from Mon 2pm /to` | ` OOPS!!! An event needs an end time after /to, for example: event meeting /from 2pm /to 4pm.` |
 | 19 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
-| 20 | Negative | `mark` | ` OOPS!!! Please provide a task number after mark, for example: mark 1.` |
-| 21 | Negative | `mark abc` | ` OOPS!!! The task number after mark must be a positive integer, for example: mark 1.` |
-| 22 | Negative | `mark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
-| 23 | Negative | `mark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
-| 24 | Positive | `mark 1` | `[T][X] borrow book`; `Nice! I've marked this task as done:` |
-| 25 | Positive state check | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
-| 26 | Negative | `unmark` | ` OOPS!!! Please provide a task number after unmark, for example: unmark 1.` |
-| 27 | Negative | `unmark abc` | ` OOPS!!! The task number after unmark must be a positive integer, for example: unmark 1.` |
-| 28 | Negative | `unmark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
-| 29 | Negative | `unmark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
-| 30 | Positive | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
-| 31 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
-| 32 | Negative | `delete` | ` OOPS!!! Please provide a task number after delete, for example: delete 1.` |
-| 33 | Negative | `delete abc` | ` OOPS!!! The task number after delete must be a positive integer, for example: delete 1.` |
-| 34 | Negative | `delete 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
-| 35 | Negative | `delete 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
-| 36 | Positive | `delete 3` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
-| 37 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
-| 38 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
+| 20 | Positive | `find book` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 21 | Positive | `find BOOK` | `Here are the matching tasks in your list:`; `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 22 | Negative | `find` | ` OOPS!!! Please provide a keyword after find, for example: find book.` |
+| 23 | Negative | `mark` | ` OOPS!!! Please provide a task number after mark, for example: mark 1.` |
+| 24 | Negative | `mark abc` | ` OOPS!!! The task number after mark must be a positive integer, for example: mark 1.` |
+| 25 | Negative | `mark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
+| 26 | Negative | `mark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
+| 27 | Positive | `mark 1` | `[T][X] borrow book`; `Nice! I've marked this task as done:` |
+| 28 | Positive state check | `list` | `1.[T][X] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
+| 29 | Negative | `unmark` | ` OOPS!!! Please provide a task number after unmark, for example: unmark 1.` |
+| 30 | Negative | `unmark abc` | ` OOPS!!! The task number after unmark must be a positive integer, for example: unmark 1.` |
+| 31 | Negative | `unmark 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
+| 32 | Negative | `unmark 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
+| 33 | Positive | `unmark 1` | `[T][ ] borrow book`; `OK, I've marked this task as not done yet:` |
+| 34 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)`; `3.[E][ ] project meeting (from: Mon 2pm to: 4pm)` |
+| 35 | Negative | `delete` | ` OOPS!!! Please provide a task number after delete, for example: delete 1.` |
+| 36 | Negative | `delete abc` | ` OOPS!!! The task number after delete must be a positive integer, for example: delete 1.` |
+| 37 | Negative | `delete 0` | ` OOPS!!! Task numbers start at 1. Use list to see valid task numbers.` |
+| 38 | Negative | `delete 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
+| 39 | Positive | `delete 3` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
+| 40 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Sunday)` |
+| 41 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
 
 ## Pass criteria
 
 The script reports `PASS` only when compilation succeeds, the startup greeting
 is present in every session, every response contains all of its expected output
-fragments, Damien exits with status 0, and all 38 main-session inputs plus the
+fragments, Damien exits with status 0, and all 41 main-session inputs plus the
 11 persistence-session inputs and the 2 corrupted-data inputs complete. At the first missing output fragment,
 it stops before sending later inputs and reports the expected fragments
 alongside the actual response. Any compiler, runtime, or missing-output failure

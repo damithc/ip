@@ -29,3 +29,12 @@ Treat the student as relatively new to Java and very new to software engineering
 I normally write code using IntelliJ IDEA. This is the first time I'm using that IDE.
 
 Use light-weight tags unless I ask for an annotated tag.
+
+Whenever running Java commands in a shell, ensure the Java version is switched to 25, using the command `sdk use java 25.0.3.fx-zulu`.
+
+After any code change, update the relevant JUnit tests, `tests/test-plan.md`, and
+`docs/README.md` when applicable.
+
+When a code change or addition is within the top 30% of high-value targets,
+add new JUnit tests or update existing tests because those changes provide the
+most value from continued JUnit coverage.

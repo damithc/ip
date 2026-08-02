@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 /**
  * Loads and saves Damien's task list in a text file.
@@ -39,8 +38,8 @@ public class Storage {
      * @return the tasks read from the data file
      * @throws DamienException if the data file cannot be read
      */
-    public ArrayList<Task> load() throws DamienException {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public TaskList load() throws DamienException {
+        TaskList tasks = new TaskList();
         corruptedRecordCount = 0;
         if (!Files.exists(filePath)) {
             return tasks;
@@ -82,7 +81,7 @@ public class Storage {
      * @param tasks the tasks to save
      * @throws DamienException if the data file cannot be written
      */
-    public void save(ArrayList<Task> tasks) throws DamienException {
+    public void save(TaskList tasks) throws DamienException {
         try {
             Path parentDirectory = filePath.getParent();
             if (parentDirectory != null) {
@@ -90,8 +89,8 @@ public class Storage {
             }
 
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                for (Task task : tasks) {
-                    writer.write(formatTask(task));
+                for (int i = 0; i < tasks.size(); i++) {
+                    writer.write(formatTask(tasks.get(i)));
                     writer.newLine();
                 }
             }

@@ -1,6 +1,5 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 /**
  * Runs the Damien command-line todo-list chatbot.
@@ -17,12 +16,12 @@ public class Damien {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage(DATA_FILE);
-        ArrayList<Task> tasks;
+        TaskList tasks;
         try {
             tasks = storage.load();
         } catch (DamienException exception) {
             ui.showError(exception);
-            tasks = new ArrayList<>();
+            tasks = new TaskList();
         }
 
         ui.showWelcome(storage.getCorruptedRecordCount());
@@ -55,7 +54,7 @@ public class Damien {
      * @param ui the user interface used to display responses
      * @throws DamienException if the command is invalid
      */
-    private static void processCommand(String command, ArrayList<Task> tasks, Storage storage, Ui ui)
+    private static void processCommand(String command, TaskList tasks, Storage storage, Ui ui)
             throws DamienException {
         CommandType commandType = CommandType.fromInput(command);
         if (commandType == null) {
@@ -68,8 +67,8 @@ public class Damien {
             break;
         case MARK:
             int taskIndex = getTaskIndex(command, commandType.getKeyword());
-            if (isValidTaskIndex(taskIndex, tasks.size())) {
-                tasks.get(taskIndex).markAsDone();
+            if (tasks.isValidIndex(taskIndex)) {
+                tasks.markAsDone(taskIndex);
                 storage.save(tasks);
                 ui.showTaskMarkedAsDone(tasks.get(taskIndex));
             } else {
@@ -78,8 +77,8 @@ public class Damien {
             break;
         case UNMARK:
             taskIndex = getTaskIndex(command, commandType.getKeyword());
-            if (isValidTaskIndex(taskIndex, tasks.size())) {
-                tasks.get(taskIndex).unmark();
+            if (tasks.isValidIndex(taskIndex)) {
+                tasks.unmark(taskIndex);
                 storage.save(tasks);
                 ui.showTaskUnmarked(tasks.get(taskIndex));
             } else {
@@ -88,7 +87,7 @@ public class Damien {
             break;
         case DELETE:
             taskIndex = getTaskIndex(command, commandType.getKeyword());
-            if (isValidTaskIndex(taskIndex, tasks.size())) {
+            if (tasks.isValidIndex(taskIndex)) {
                 deleteTask(tasks, taskIndex, storage, ui);
             } else {
                 throw invalidTaskIndexException(taskIndex);
@@ -122,7 +121,7 @@ public class Damien {
      * @param storage the file storage used to persist changes
      * @param ui the user interface used to display responses
      */
-    private static void deleteTask(ArrayList<Task> tasks, int taskIndex, Storage storage, Ui ui)
+    private static void deleteTask(TaskList tasks, int taskIndex, Storage storage, Ui ui)
             throws DamienException {
         Task deletedTask = tasks.remove(taskIndex);
         storage.save(tasks);
@@ -166,17 +165,6 @@ public class Damien {
     private static DamienException invalidTaskIndexException(int taskIndex) {
         return new DamienException("Task " + (taskIndex + 1)
                 + " does not exist. Use list to see valid task numbers.");
-    }
-
-    /**
-     * Checks whether a zero-based task index points to an existing task.
-     *
-     * @param taskIndex the index to check
-     * @param taskCount the current number of tasks
-     * @return true when the index is within the task list
-     */
-    private static boolean isValidTaskIndex(int taskIndex, int taskCount) {
-        return taskIndex >= 0 && taskIndex < taskCount;
     }
 
     /**
@@ -251,7 +239,7 @@ public class Damien {
      * @param storage the file storage used to persist changes
      * @param ui the user interface used to display responses
      */
-    private static void addTask(ArrayList<Task> tasks, Task task, Storage storage, Ui ui)
+    private static void addTask(TaskList tasks, Task task, Storage storage, Ui ui)
             throws DamienException {
         tasks.add(task);
         storage.save(tasks);

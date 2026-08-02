@@ -51,6 +51,16 @@ public class Task {
     }
 
     /**
+     * Returns this task in the one-line format used by persistent storage.
+     *
+     * @return the task's saved representation
+     */
+    public String toStorageString() {
+        String status = isDone ? "1" : "0";
+        return "T | " + status + " | " + description;
+    }
+
+    /**
      * Returns the task's completion marker and description.
      *
      * @return the task formatted for display in the task list

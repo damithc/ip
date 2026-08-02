@@ -3,10 +3,10 @@
  */
 public class Event extends Task {
     /** The date or time when this event starts. */
-    protected String from;
+    private String from;
 
     /** The date or time when this event ends. */
-    protected String to;
+    private String to;
 
     /**
      * Creates an event task.
@@ -37,6 +37,13 @@ public class Event extends Task {
      */
     public String getTo() {
         return to;
+    }
+
+    @Override
+    public String toStorageString() {
+        String status = isDone() ? "1" : "0";
+        return "E | " + status + " | " + getDescription() + " | "
+                + from + " | " + to;
     }
 
     @Override

@@ -90,7 +90,7 @@ public class Storage {
 
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
                 for (int i = 0; i < tasks.size(); i++) {
-                    writer.write(formatTask(tasks.get(i)));
+                    writer.write(tasks.get(i).toStorageString());
                     writer.newLine();
                 }
             }
@@ -148,23 +148,4 @@ public class Storage {
         return task;
     }
 
-    /**
-     * Converts a task into its one-line file representation.
-     *
-     * @param task the task to format
-     * @return the saved task record
-     */
-    private String formatTask(Task task) {
-        String status = task.isDone() ? "1" : "0";
-        if (task instanceof Deadline) {
-            Deadline deadline = (Deadline) task;
-            return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
-        }
-        if (task instanceof Event) {
-            Event event = (Event) task;
-            return "E | " + status + " | " + task.getDescription() + " | "
-                    + event.getFrom() + " | " + event.getTo();
-        }
-        return "T | " + status + " | " + task.getDescription();
-    }
 }

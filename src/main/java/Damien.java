@@ -1,30 +1,48 @@
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Runs the Damien command-line todo-list chatbot.
+ * Coordinates Damien's user interface, storage, parser, and task list.
+ *
+ * <p>The application object owns the state needed during one run, while each
+ * collaborator focuses on one part of the chatbot's work.</p>
  */
 public class Damien {
     /** The relative path used to persist Damien's task list. */
-    private static final Path DATA_FILE = Paths.get("data", "duke.txt");
+    private static final String DATA_FILE = "data/duke.txt";
+
+    /** Handles interaction with the user through the command line. */
+    private final Ui ui;
+
+    /** Loads and saves the task list. */
+    private final Storage storage;
+
+    /** Interprets commands entered by the user. */
+    private final Parser parser;
+
+    /** Stores the tasks managed during this run. */
+    private TaskList tasks;
 
     /**
-     * Starts Damien and processes commands until the user says goodbye.
+     * Creates Damien using the given file for task persistence.
      *
-     * @param args command-line arguments, which are not used by Damien
+     * @param filePath the path of the task data file
      */
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage(DATA_FILE);
-        Parser parser = new Parser();
-        TaskList tasks;
+    public Damien(String filePath) {
+        ui = new Ui();
+        storage = new Storage(Paths.get(filePath));
+        parser = new Parser();
         try {
             tasks = storage.load();
         } catch (DamienException exception) {
             ui.showError(exception);
             tasks = new TaskList();
         }
+    }
 
+    /**
+     * Starts Damien and processes commands until the user says goodbye.
+     */
+    public void run() {
         ui.showWelcome(storage.getCorruptedRecordCount());
 
         while (ui.hasNextLine()) {
@@ -37,7 +55,7 @@ public class Damien {
             }
 
             try {
-                processCommand(command, tasks, storage, ui, parser);
+                processCommand(command);
             } catch (DamienException exception) {
                 ui.showError(exception);
             }
@@ -50,15 +68,9 @@ public class Damien {
      * Parses one command and applies its change to the task list.
      *
      * @param command the command entered by the user
-     * @param tasks the collection of tasks being managed
-     * @param storage the file storage used to persist changes
-     * @param ui the user interface used to display responses
-     * @param parser the parser used to interpret commands
      * @throws DamienException if the command is invalid
      */
-    private static void processCommand(String command, TaskList tasks, Storage storage, Ui ui,
-            Parser parser)
-            throws DamienException {
+    private void processCommand(String command) throws DamienException {
         CommandType commandType = parser.parseCommand(command);
 
         switch (commandType) {
@@ -88,22 +100,22 @@ public class Damien {
         case DELETE:
             taskIndex = parser.parseTaskIndex(command, commandType);
             if (tasks.isValidIndex(taskIndex)) {
-                deleteTask(tasks, taskIndex, storage, ui);
+                deleteTask(taskIndex);
             } else {
                 throw invalidTaskIndexException(taskIndex);
             }
             break;
         case TODO:
             String description = parser.parseTodoDescription(command, commandType);
-            addTask(tasks, new Todo(description), storage, ui);
+            addTask(new Todo(description));
             break;
         case DEADLINE:
             Task deadline = parser.parseDeadline(command, commandType);
-            addTask(tasks, deadline, storage, ui);
+            addTask(deadline);
             break;
         case EVENT:
             Task event = parser.parseEvent(command, commandType);
-            addTask(tasks, event, storage, ui);
+            addTask(event);
             break;
         default:
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
@@ -113,13 +125,9 @@ public class Damien {
     /**
      * Removes the selected task and reports the updated list size.
      *
-     * @param tasks the collection of tasks being managed
      * @param taskIndex the zero-based index of the task to remove
-     * @param storage the file storage used to persist changes
-     * @param ui the user interface used to display responses
      */
-    private static void deleteTask(TaskList tasks, int taskIndex, Storage storage, Ui ui)
-            throws DamienException {
+    private void deleteTask(int taskIndex) throws DamienException {
         Task deletedTask = tasks.remove(taskIndex);
         storage.save(tasks);
 
@@ -132,23 +140,28 @@ public class Damien {
      * @param taskIndex the invalid zero-based task index
      * @return an exception describing the invalid task number
      */
-    private static DamienException invalidTaskIndexException(int taskIndex) {
+    private DamienException invalidTaskIndexException(int taskIndex) {
         return new DamienException("Task " + (taskIndex + 1)
                 + " does not exist. Use list to see valid task numbers.");
     }
 
     /**
-     * Adds a task to the collection and reports the updated list size.
+     * Adds a task to the list and reports the updated list size.
      *
-     * @param tasks the collection of tasks being managed
      * @param task the task to add
-     * @param storage the file storage used to persist changes
-     * @param ui the user interface used to display responses
      */
-    private static void addTask(TaskList tasks, Task task, Storage storage, Ui ui)
-            throws DamienException {
+    private void addTask(Task task) throws DamienException {
         tasks.add(task);
         storage.save(tasks);
         ui.showTaskAdded(task, tasks.size());
+    }
+
+    /**
+     * Launches Damien with its default data file.
+     *
+     * @param args command-line arguments, which are not used by Damien
+     */
+    public static void main(String[] args) {
+        new Damien(DATA_FILE).run();
     }
 }

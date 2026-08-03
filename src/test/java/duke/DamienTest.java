@@ -27,7 +27,9 @@ public class DamienTest {
         Damien damien = new Damien(temporaryDirectory.resolve("tasks.txt").toString(), guiUi);
 
         damien.showWelcome();
-        assertTrue(guiUi.consumeOutput().contains("Hello! I'm Damien"));
+        String welcome = guiUi.consumeOutput();
+        assertTrue(welcome.contains("Hello! I'm Damien"));
+        assertFalse(welcome.contains("____________________________________________________________"));
 
         assertTrue(damien.processCommand("todo read book"));
         String addResponse = guiUi.consumeOutput();

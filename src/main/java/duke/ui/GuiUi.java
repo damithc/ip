@@ -3,6 +3,7 @@ package duke.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 /**
  * Captures Damien's formatted responses so that the JavaFX controller can
@@ -37,6 +38,9 @@ public class GuiUi extends Ui {
     public String consumeOutput() {
         String response = output.toString(StandardCharsets.UTF_8);
         output.reset();
-        return response.stripTrailing();
+        return response.lines()
+                .filter(line -> !line.matches("_+"))
+                .collect(Collectors.joining("\n"))
+                .stripTrailing();
     }
 }

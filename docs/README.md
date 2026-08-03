@@ -16,8 +16,9 @@ anchored to the bottom of the window.
 
 User commands and Damien's responses use separate high-contrast message
 bubbles, with compact avatars and spacing designed for quick scanning.
-The header identifies Damien as a task assistant, while the command bar keeps
-the input field and `Send` action together.
+The header has a dedicated content area so the startup greeting remains fully
+visible below it, while the command bar keeps the input field and `Send` action
+together.
 
 Enter the same commands described below in the text box. Press `Enter` or
 click `Send` to submit a command; both the command and Damien's response are

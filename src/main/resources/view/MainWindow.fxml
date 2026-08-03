@@ -17,6 +17,8 @@
             fx:controller="duke.ui.MainWindow">
     <children>
         <VBox styleClass="workspace-header"
+              minHeight="96.0"
+              prefHeight="96.0"
               spacing="2.0"
               AnchorPane.leftAnchor="0.0"
               AnchorPane.rightAnchor="0.0"
@@ -32,7 +34,7 @@
                     AnchorPane.bottomAnchor="82.0"
                     AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="78.0">
+                    AnchorPane.topAnchor="96.0">
             <content>
                 <VBox fx:id="dialogContainer"
                       fillWidth="true"

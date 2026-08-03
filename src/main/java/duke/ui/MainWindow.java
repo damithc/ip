@@ -63,6 +63,7 @@ public class MainWindow extends AnchorPane {
         this.guiUi = guiUi;
         damien.showWelcome();
         addDamienResponse(guiUi.consumeOutput());
+        userInput.requestFocus();
     }
 
     /**

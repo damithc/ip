@@ -58,7 +58,8 @@ distinct, use upright readable text, and remain readable:
 When a task list is displayed, verify that the numbered rows use a monospace
 font and that the task status markers line up consistently.
 The GUI should show the startup greeting without the long separator lines used
-by the deprecated CLI, with both greeting lines visible in the response bubble.
+by the deprecated CLI, with both greeting lines visible in the response bubble
+at the top of the conversation.
 
 ## Test cases in execution order
 

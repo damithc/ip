@@ -45,11 +45,13 @@ public class MainWindow extends AnchorPane {
             MainWindow.class.getResourceAsStream("/images/DaDuke.png"));
 
     /**
-     * Binds the conversation scroll position to its content height.
+     * Keeps the latest conversation response visible as the content grows.
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) -> {
+            scrollPane.setVvalue(1.0);
+        });
     }
 
     /**

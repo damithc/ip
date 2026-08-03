@@ -26,7 +26,8 @@ details are easier to scan.
 The GUI omits the separator lines used by the deprecated CLI, keeping each
 conversation bubble focused on the actual message.
 Conversation bubbles also size themselves for multiline responses such as the
-startup greeting.
+startup greeting, and the conversation starts at the greeting instead of
+opening scrolled past it.
 
 Enter the same commands described below in the text box. Press `Enter` or
 click `Send` to submit a command; both the command and Damien's response are

@@ -54,6 +54,13 @@ The regular `./gradlew check` task runs these checks as well. The configuration
 files are in `config/checkstyle` for use with Gradle or the Checkstyle-IDEA
 plugin.
 
+## Continuous integration
+
+GitHub Actions runs the workflow in `.github/workflows/gradle.yml` for every
+push and pull request. It runs `./gradlew check` on Ubuntu, macOS, and Windows
+using Zulu JDK 25 with JavaFX, so compilation, JUnit tests, and Checkstyle are
+checked consistently across platforms.
+
 ## Development assertions
 
 Damien uses Java's `assert` statement to document assumptions between internal

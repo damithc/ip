@@ -48,6 +48,13 @@ and Checkstyle checks together. Gradle also enables Java assertions for the
 tests and both application entry points, so the assertion-based internal
 assumptions are exercised during the normal workflow.
 
+## Continuous integration
+
+The GitHub Actions workflow at `.github/workflows/gradle.yml` runs on every push
+and pull request. It runs `./gradlew check` on Ubuntu, macOS, and Windows with
+Zulu JDK 25 and JavaFX. A CI run passes when the Gradle check succeeds on all
+three platforms.
+
 The executable's output remains authoritative for the end-to-end CLI run. The
 expected output fragments below are assertions used to detect regressions;
 compare the actual wording, spacing, separators, task numbering, and status

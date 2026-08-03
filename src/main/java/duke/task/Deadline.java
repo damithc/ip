@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -38,6 +39,10 @@ public class Deadline extends Task {
     private static final DateTimeFormatter DAY_MONTH_DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("d/M/uuuu HHmm", Locale.ENGLISH)
                     .withResolverStyle(ResolverStyle.STRICT);
+
+    /** Date-and-time formats accepted for parsing, in preferred order. */
+    private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
+            ISO_DATE_TIME_FORMATTER, DAY_MONTH_DATE_TIME_FORMATTER);
 
     /** The date and optional time by which this task should be completed. */
     private final LocalDateTime by;
@@ -135,19 +140,29 @@ public class Deadline extends Task {
      */
     private static LocalDateTime parseDateTime(String value) {
         assert value != null : "A deadline value must not be null.";
-        try {
-            return LocalDateTime.parse(value, ISO_DATE_TIME_FORMATTER);
-        } catch (DateTimeParseException exception) {
+        for (DateTimeFormatter formatter : DATE_TIME_FORMATTERS) {
             try {
-                return LocalDateTime.parse(value, DAY_MONTH_DATE_TIME_FORMATTER);
-            } catch (DateTimeParseException ignored) {
-                try {
-                    return LocalDate.parse(value, STORAGE_DATE_FORMATTER).atStartOfDay();
-                } catch (DateTimeParseException invalidDate) {
-                    throw new IllegalArgumentException("Unsupported deadline date: " + value,
-                            invalidDate);
-                }
+                return LocalDateTime.parse(value, formatter);
+            } catch (DateTimeParseException exception) {
+                // Try the next supported date-and-time format.
             }
+        }
+        return parseDateOnly(value);
+    }
+
+    /**
+     * Parses a date-only deadline after date-and-time formats have been tried.
+     *
+     * @param value the deadline text
+     * @return the parsed date at midnight
+     * @throws IllegalArgumentException if the value is not a supported date format
+     */
+    private static LocalDateTime parseDateOnly(String value) {
+        try {
+            return LocalDate.parse(value, STORAGE_DATE_FORMATTER).atStartOfDay();
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("Unsupported deadline date: " + value,
+                    exception);
         }
     }
 

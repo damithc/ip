@@ -120,15 +120,15 @@ public class Parser {
      * @throws DamienException if the description or /by field is missing
      */
     private Task parseDeadline(String command, CommandType commandType) throws DamienException {
-        command = getArgument(command, commandType);
-        int byIndex = command.indexOf("/by");
+        String argument = getArgument(command, commandType);
+        int byIndex = argument.indexOf("/by");
         if (byIndex < 0) {
             throw new DamienException("A deadline needs a /by field, for example: "
                     + "deadline return book /by 2019-10-15.");
         }
 
-        String description = command.substring(0, byIndex).trim();
-        String by = command.substring(byIndex + "/by".length()).trim();
+        String description = argument.substring(0, byIndex).trim();
+        String by = argument.substring(byIndex + "/by".length()).trim();
         if (description.isEmpty()) {
             throw new DamienException("A deadline needs a description before /by, for example: "
                     + "deadline return book /by 2019-10-15.");
@@ -154,9 +154,9 @@ public class Parser {
      * @throws DamienException if the description, /from field, or /to field is missing
      */
     private Task parseEvent(String command, CommandType commandType) throws DamienException {
-        command = getArgument(command, commandType);
-        int fromIndex = command.indexOf("/from");
-        int toIndex = command.indexOf("/to", fromIndex + "/from".length());
+        String argument = getArgument(command, commandType);
+        int fromIndex = argument.indexOf("/from");
+        int toIndex = argument.indexOf("/to", fromIndex + "/from".length());
         if (fromIndex < 0) {
             throw new DamienException("An event needs a /from field, for example: "
                     + "event meeting /from 2pm /to 4pm.");
@@ -166,9 +166,9 @@ public class Parser {
                     + "event meeting /from 2pm /to 4pm.");
         }
 
-        String description = command.substring(0, fromIndex).trim();
-        String from = command.substring(fromIndex + "/from".length(), toIndex).trim();
-        String to = command.substring(toIndex + "/to".length()).trim();
+        String description = argument.substring(0, fromIndex).trim();
+        String from = argument.substring(fromIndex + "/from".length(), toIndex).trim();
+        String to = argument.substring(toIndex + "/to".length()).trim();
         if (description.isEmpty()) {
             throw new DamienException("An event needs a description before /from, for example: "
                     + "event meeting /from 2pm /to 4pm.");

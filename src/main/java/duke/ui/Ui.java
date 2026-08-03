@@ -111,10 +111,7 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         assert tasks != null : "The user interface must receive a task list to display.";
-        printLine("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            printLine((i + 1) + "." + tasks.get(i));
-        }
+        showTasks("Here are the tasks in your list:", tasks);
     }
 
     /**
@@ -124,7 +121,17 @@ public class Ui {
      */
     public void showMatchingTasks(TaskList tasks) {
         assert tasks != null : "The user interface must receive matching tasks to display.";
-        printLine("Here are the matching tasks in your list:");
+        showTasks("Here are the matching tasks in your list:", tasks);
+    }
+
+    /**
+     * Displays a heading followed by tasks in their numbered order.
+     *
+     * @param heading the heading to display before the tasks
+     * @param tasks the tasks to display
+     */
+    private void showTasks(String heading, TaskList tasks) {
+        printLine(heading);
         for (int i = 0; i < tasks.size(); i++) {
             printLine((i + 1) + "." + tasks.get(i));
         }

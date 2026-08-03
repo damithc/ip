@@ -105,8 +105,8 @@ public class TaskService {
      * @throws DamienException if the index is invalid or the list cannot be saved
      */
     public Task delete(int taskIndex) throws DamienException {
-        getTask(taskIndex);
-        Task deletedTask = tasks.remove(taskIndex);
+        Task deletedTask = getTask(taskIndex);
+        tasks.remove(taskIndex);
         storage.save(tasks);
         return deletedTask;
     }

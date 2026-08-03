@@ -55,6 +55,9 @@ distinct, use upright readable text, and remain readable:
 | `find gui` submitted with `Send` | The command and `Here are the matching tasks in your list:` are displayed. |
 | `bye` | Damien's goodbye message is displayed and the window closes. |
 
+When a task list is displayed, verify that the numbered rows use a monospace
+font and that the task status markers line up consistently.
+
 ## Test cases in execution order
 
 The startup greeting is checked before the first input. The following cases

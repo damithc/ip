@@ -34,6 +34,12 @@
     -fx-background-color: #ffffff;
 }
 
+.dialog-box.task-list-dialog .message-label {
+    -fx-font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 1px;
+}
+
 .dialog-box .avatar {
     -fx-effect: dropshadow(gaussian, rgba(23, 32, 51, 0.18), 7, 0.2, 0, 2);
 }

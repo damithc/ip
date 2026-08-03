@@ -18,6 +18,9 @@ import javafx.scene.layout.HBox;
  * Represents a conversation message with an avatar and message text.
  */
 public class DialogBox extends HBox {
+    /** Style class used for responses containing numbered task rows. */
+    private static final String TASK_LIST_DIALOG_STYLE = "task-list-dialog";
+
     /** The label containing the message text. */
     @FXML
     private Label dialog;
@@ -82,6 +85,19 @@ public class DialogBox extends HBox {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
         dialogBox.getStyleClass().add("damien-dialog");
+        if (containsTaskListRows(text)) {
+            dialogBox.getStyleClass().add(TASK_LIST_DIALOG_STYLE);
+        }
         return dialogBox;
+    }
+
+    /**
+     * Checks whether a response contains a numbered task row.
+     *
+     * @param text the response text to inspect
+     * @return true if the response contains a formatted task row
+     */
+    static boolean containsTaskListRows(String text) {
+        return text.lines().anyMatch(line -> line.matches("\\d+\\.\\[[TDE]\\]\\[[ X]\\].*"));
     }
 }

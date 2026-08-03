@@ -61,6 +61,7 @@ public class MainWindow extends AnchorPane {
      * @param guiUi the output sink used by the chatbot
      */
     public void setDamien(Damien damien, GuiUi guiUi) {
+        assert damien != null && guiUi != null : "The main window needs Damien and its GUI output sink.";
         this.damien = damien;
         this.guiUi = guiUi;
         damien.showWelcome();

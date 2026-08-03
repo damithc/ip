@@ -20,6 +20,7 @@ public class Parser {
      * @throws DamienException if the input is not a recognised command
      */
     public Command parse(String input) throws DamienException {
+        assert input != null : "The parser must receive a command string.";
         CommandType commandType = CommandType.fromInput(input);
         if (commandType == null) {
             throw new DamienException("I'm sorry, but I don't know what that means :-(");
@@ -42,6 +43,8 @@ public class Parser {
             case EVENT:
                 return new Command(commandType, parseEvent(input, commandType));
             default:
+                assert commandType == CommandType.BYE || commandType == CommandType.LIST
+                        : "Only commands without arguments should reach the default case.";
                 return new Command(commandType);
         }
     }
@@ -189,6 +192,9 @@ public class Parser {
      * @return the trimmed command argument
      */
     private String getArgument(String command, CommandType commandType) {
+        assert command != null && commandType != null
+                && command.startsWith(commandType.getKeyword())
+                : "The parser must extract arguments from a matching command.";
         return command.substring(commandType.getKeyword().length()).trim();
     }
 }

@@ -24,11 +24,14 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane root = fxmlLoader.load();
+            assert root != null : "The main window FXML must provide a root node.";
             Scene scene = new Scene(root);
 
             GuiUi guiUi = new GuiUi();
             Damien damien = new Damien(Damien.DEFAULT_DATA_FILE, guiUi);
-            fxmlLoader.<MainWindow>getController().setDamien(damien, guiUi);
+            MainWindow controller = fxmlLoader.getController();
+            assert controller != null : "The main window FXML must provide a controller.";
+            controller.setDamien(damien, guiUi);
 
             stage.setTitle("Damien | Task Assistant");
             stage.setMinWidth(620);

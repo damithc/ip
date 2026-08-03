@@ -91,6 +91,7 @@ public class Deadline extends Task {
      */
     private Deadline(String description, LocalDateTime by, boolean hasTime) {
         super(description);
+        assert by != null : "A deadline must have a parsed date and time.";
         this.by = by;
         this.hasTime = hasTime;
     }
@@ -138,6 +139,7 @@ public class Deadline extends Task {
      * @throws IllegalArgumentException if the value is not a supported date format
      */
     private static LocalDateTime parseDateTime(String value) {
+        assert value != null : "A deadline value must not be null.";
         for (DateTimeFormatter formatter : DATE_TIME_FORMATTERS) {
             try {
                 return LocalDateTime.parse(value, formatter);

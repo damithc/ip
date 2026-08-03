@@ -57,6 +57,7 @@ public class Damien {
      * @param ui the interface that receives user-facing messages
      */
     public Damien(String filePath, Ui ui) {
+        assert filePath != null && ui != null : "Damien needs a file path and user interface.";
         this.ui = ui;
         storage = new Storage(Paths.get(filePath));
         parser = new Parser();
@@ -66,6 +67,7 @@ public class Damien {
             ui.showError(exception);
             tasks = new TaskList();
         }
+        assert tasks != null : "Damien must always have a task list.";
         taskService = new TaskService(tasks, storage);
         commandHandler = new CommandHandler(taskService, ui);
     }
@@ -100,8 +102,10 @@ public class Damien {
      * @return false when the command was {@code bye}; true otherwise
      */
     public boolean processCommand(String command) {
+        assert command != null : "Damien can only process a non-null command.";
         try {
             Command parsedCommand = parser.parse(command);
+            assert parsedCommand != null : "The parser must return a command for valid input.";
             if (parsedCommand.getType() == CommandType.BYE) {
                 ui.showGoodbye();
                 return false;

@@ -19,6 +19,8 @@ public class Event extends Task {
      */
     public Event(String description, String from, String to) {
         super(description);
+        assert from != null && !from.isBlank() && to != null && !to.isBlank()
+                : "An event must have non-blank start and end times.";
         this.from = from;
         this.to = to;
     }

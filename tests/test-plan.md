@@ -20,6 +20,13 @@ sdk use java 25.0.3.fx-zulu
 ./gradlew test
 ```
 
+Run the Checkstyle checks from the project root with:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+./gradlew checkstyleMain checkstyleTest
+```
+
 For the end-to-end CLI session represented by the table, use the deprecated
 Gradle task below and provide the inputs in order (or redirect a prepared input
 file to it):
@@ -34,6 +41,10 @@ The Gradle test task:
    `build.gradle`.
 2. Runs the JUnit tests, including command-processing coverage used by the
    GUI.
+
+The Checkstyle tasks verify that both the main and test Java sources follow the
+SE-EDU Java coding standard. The regular `./gradlew check` task runs the JUnit
+and Checkstyle checks together.
 
 The executable's output remains authoritative for the end-to-end CLI run. The
 expected output fragments below are assertions used to detect regressions;
@@ -118,8 +129,8 @@ the response for that row.
 
 ## Pass criteria
 
-The Gradle test run passes when compilation succeeds and every JUnit test
-passes. The manual CLI run passes when the startup greeting is present, every
+The Gradle check run passes when compilation succeeds, every JUnit test passes,
+and Checkstyle reports no violations. The manual CLI run passes when the startup greeting is present, every
 response contains its expected output fragments, Damien exits with status 0,
 and all 41 main-session inputs complete. Run the persistence and corrupted-data
 cases in fresh CLI sessions when checking storage behavior. Any compiler,

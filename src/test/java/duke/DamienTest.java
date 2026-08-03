@@ -1,13 +1,14 @@
 package duke;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.nio.file.Path;
 
-import duke.ui.GuiUi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import duke.ui.GuiUi;
 
 /**
  * Tests the command-processing boundary shared by the GUI and the CLI.

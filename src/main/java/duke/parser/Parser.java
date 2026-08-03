@@ -26,23 +26,23 @@ public class Parser {
         }
 
         switch (commandType) {
-        case MARK:
-        // Fallthrough
-        case UNMARK:
-        // Fallthrough
-        case DELETE:
-            return new Command(commandType, parseTaskIndex(input, commandType));
-        case FIND:
-            return new Command(commandType, parseFindKeyword(input, commandType));
-        case TODO:
-            return new Command(commandType,
-                    new Todo(parseTodoDescription(input, commandType)));
-        case DEADLINE:
-            return new Command(commandType, parseDeadline(input, commandType));
-        case EVENT:
-            return new Command(commandType, parseEvent(input, commandType));
-        default:
-            return new Command(commandType);
+            case MARK:
+            // Fallthrough
+            case UNMARK:
+            // Fallthrough
+            case DELETE:
+                return new Command(commandType, parseTaskIndex(input, commandType));
+            case FIND:
+                return new Command(commandType, parseFindKeyword(input, commandType));
+            case TODO:
+                return new Command(commandType,
+                        new Todo(parseTodoDescription(input, commandType)));
+            case DEADLINE:
+                return new Command(commandType, parseDeadline(input, commandType));
+            case EVENT:
+                return new Command(commandType, parseEvent(input, commandType));
+            default:
+                return new Command(commandType);
         }
     }
 

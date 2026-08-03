@@ -37,30 +37,30 @@ public class CommandHandler {
      */
     public void handle(Command command) throws DamienException {
         switch (command.getType()) {
-        case LIST:
-            ui.showTaskList(taskService.getTasks());
-            break;
-        case MARK:
-            ui.showTaskMarkedAsDone(taskService.markAsDone(command.getTaskIndex()));
-            break;
-        case UNMARK:
-            ui.showTaskUnmarked(taskService.unmark(command.getTaskIndex()));
-            break;
-        case DELETE:
-            deleteTask(command.getTaskIndex());
-            break;
-        case FIND:
-            ui.showMatchingTasks(taskService.find(command.getKeyword()));
-            break;
-        case TODO:
-        // Fallthrough
-        case DEADLINE:
-        // Fallthrough
-        case EVENT:
-            addTask(command.getTask());
-            break;
-        default:
-            throw new DamienException("I'm sorry, but I don't know what that means :-(");
+            case LIST:
+                ui.showTaskList(taskService.getTasks());
+                break;
+            case MARK:
+                ui.showTaskMarkedAsDone(taskService.markAsDone(command.getTaskIndex()));
+                break;
+            case UNMARK:
+                ui.showTaskUnmarked(taskService.unmark(command.getTaskIndex()));
+                break;
+            case DELETE:
+                deleteTask(command.getTaskIndex());
+                break;
+            case FIND:
+                ui.showMatchingTasks(taskService.find(command.getKeyword()));
+                break;
+            case TODO:
+            // Fallthrough
+            case DEADLINE:
+            // Fallthrough
+            case EVENT:
+                addTask(command.getTask());
+                break;
+            default:
+                throw new DamienException("I'm sorry, but I don't know what that means :-(");
         }
     }
 

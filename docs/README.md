@@ -40,6 +40,20 @@ The old text UI is deprecated and can be run with `./gradlew runCli`.
 
 Damien keeps a list of three kinds of tasks: ToDos, deadlines, and events.
 
+## Checking code style
+
+Checkstyle checks both production and test Java sources against the SE-EDU Java
+coding standard. From the project root, run:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+./gradlew checkstyleMain checkstyleTest
+```
+
+The regular `./gradlew check` task runs these checks as well. The configuration
+files are in `config/checkstyle` for use with Gradle or the Checkstyle-IDEA
+plugin.
+
 ## Adding a ToDo
 
 Use `todo` followed by a task description:

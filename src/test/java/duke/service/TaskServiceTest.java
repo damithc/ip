@@ -1,20 +1,21 @@
 package duke.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import duke.exception.DamienException;
 import duke.storage.Storage;
 import duke.task.Task;
 import duke.task.TaskList;
 import duke.task.Todo;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests task changes and persistence coordinated by {@link TaskService}.
@@ -115,8 +116,8 @@ public class TaskServiceTest {
         TaskService service = new TaskService(new TaskList(),
                 new Storage(temporaryDirectory.resolve("tasks.txt")));
 
-        DamienException exception = assertThrows(DamienException.class,
-                () -> service.delete(0));
+        DamienException exception = assertThrows(
+                DamienException.class, () -> service.delete(0));
 
         assertEquals("Task 1 does not exist. Use list to see valid task numbers.",
                 exception.getMessage());

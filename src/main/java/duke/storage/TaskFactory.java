@@ -33,30 +33,30 @@ public class TaskFactory {
 
         Task task;
         switch (type) {
-        case "T":
-            if (fields.length != 3) {
+            case "T":
+                if (fields.length != 3) {
+                    return null;
+                }
+                task = new Todo(description);
+                break;
+            case "D":
+                if (fields.length != 4 || fields[3].isEmpty()) {
+                    return null;
+                }
+                try {
+                    task = new Deadline(description, fields[3]);
+                } catch (IllegalArgumentException exception) {
+                    return null;
+                }
+                break;
+            case "E":
+                if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {
+                    return null;
+                }
+                task = new Event(description, fields[3], fields[4]);
+                break;
+            default:
                 return null;
-            }
-            task = new Todo(description);
-            break;
-        case "D":
-            if (fields.length != 4 || fields[3].isEmpty()) {
-                return null;
-            }
-            try {
-                task = new Deadline(description, fields[3]);
-            } catch (IllegalArgumentException exception) {
-                return null;
-            }
-            break;
-        case "E":
-            if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {
-                return null;
-            }
-            task = new Event(description, fields[3], fields[4]);
-            break;
-        default:
-            return null;
         }
 
         if (status.equals("1")) {

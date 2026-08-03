@@ -1,19 +1,19 @@
 package duke.storage;
 
-import java.time.LocalDateTime;
-
-import duke.task.Deadline;
-import duke.task.Event;
-import duke.task.Task;
-import duke.task.Todo;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
+import duke.task.Deadline;
+import duke.task.Event;
+import duke.task.Task;
+import duke.task.Todo;
 
 /**
  * Tests conversion from saved records to task objects.
@@ -78,13 +78,11 @@ public class TaskFactoryTest {
      */
     @Test
     public void createFromStorageRejectsMalformedRecords() {
-        assertAll(
-                () -> assertNull(taskFactory.createFromStorage("invalid record")),
-                () -> assertNull(taskFactory.createFromStorage("T | 2 | invalid status")),
-                () -> assertNull(taskFactory.createFromStorage("D | 0 | missing deadline | ")),
-                () -> assertNull(taskFactory.createFromStorage("D | 0 | invalid date | 2019-02-30")),
-                () -> assertNull(taskFactory.createFromStorage("E | 0 | missing end | 2pm | ")),
-                () -> assertNull(taskFactory.createFromStorage("X | 0 | unknown type"))
-        );
+        assertNull(taskFactory.createFromStorage("invalid record"));
+        assertNull(taskFactory.createFromStorage("T | 2 | invalid status"));
+        assertNull(taskFactory.createFromStorage("D | 0 | missing deadline | "));
+        assertNull(taskFactory.createFromStorage("D | 0 | invalid date | 2019-02-30"));
+        assertNull(taskFactory.createFromStorage("E | 0 | missing end | 2pm | "));
+        assertNull(taskFactory.createFromStorage("X | 0 | unknown type"));
     }
 }

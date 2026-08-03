@@ -1,6 +1,13 @@
 package duke.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
 
 import duke.command.Command;
 import duke.command.CommandType;
@@ -8,12 +15,6 @@ import duke.exception.DamienException;
 import duke.task.Deadline;
 import duke.task.Event;
 import duke.task.Todo;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests the command and task extraction performed by {@link Parser}.
@@ -72,8 +73,8 @@ public class ParserTest {
      */
     @Test
     public void parseDeadlineCommandRejectsInvalidDate() {
-        DamienException exception = assertThrows(DamienException.class,
-                () -> parser.parse("deadline return book /by 2019-02-30"));
+        DamienException exception = assertThrows(
+                DamienException.class, () -> parser.parse("deadline return book /by 2019-02-30"));
 
         assertEquals("A deadline date must use yyyy-MM-dd, optionally followed by HHmm, "
                 + "or d/M/yyyy HHmm, for example: deadline return book /by 2019-10-15.",
@@ -129,8 +130,8 @@ public class ParserTest {
      */
     @Test
     public void parseFindCommandRejectsMissingKeyword() {
-        DamienException exception = assertThrows(DamienException.class,
-                () -> parser.parse("find"));
+        DamienException exception = assertThrows(
+                DamienException.class, () -> parser.parse("find"));
 
         assertEquals("Please provide a keyword after find, for example: find book.",
                 exception.getMessage());
@@ -155,8 +156,8 @@ public class ParserTest {
      */
     @Test
     public void parseRejectsNonPositiveTaskNumbers() {
-        DamienException exception = assertThrows(DamienException.class,
-                () -> parser.parse("mark 0"));
+        DamienException exception = assertThrows(
+                DamienException.class, () -> parser.parse("mark 0"));
 
         assertEquals("Task numbers start at 1. Use list to see valid task numbers.",
                 exception.getMessage());
@@ -167,8 +168,8 @@ public class ParserTest {
      */
     @Test
     public void parseRejectsUnknownCommands() {
-        DamienException exception = assertThrows(DamienException.class,
-                () -> parser.parse("what is this"));
+        DamienException exception = assertThrows(
+                DamienException.class, () -> parser.parse("what is this"));
 
         assertEquals("I'm sorry, but I don't know what that means :-(",
                 exception.getMessage());

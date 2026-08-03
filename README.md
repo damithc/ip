@@ -32,4 +32,17 @@ is deprecated but remains available for regression testing:
 ./gradlew runCli
 ```
 
+## Checking code style
+
+Checkstyle checks the main and test Java sources against the SE-EDU Java coding
+standard. Run the checks from the project root with:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+./gradlew checkstyleMain checkstyleTest
+```
+
+The same checks also run as part of `./gradlew check`. The configuration files
+used by Gradle and the Checkstyle-IDEA plugin are in `config/checkstyle`.
+
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.

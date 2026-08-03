@@ -20,10 +20,10 @@ import duke.ui.Ui;
  * collaborator focuses on one part of the chatbot's work.</p>
  */
 public class Damien {
-    /** The relative path used to persist Damien's task list. */
-    private static final String DATA_FILE = "data/duke.txt";
+    /** The default relative path used to persist Damien's task list. */
+    public static final String DEFAULT_DATA_FILE = "data/duke.txt";
 
-    /** Handles interaction with the user through the command line. */
+    /** Handles interaction with the user through the selected interface. */
     private final Ui ui;
 
     /** Loads and saves the task list. */
@@ -47,7 +47,17 @@ public class Damien {
      * @param filePath the path of the task data file
      */
     public Damien(String filePath) {
-        ui = new Ui();
+        this(filePath, new Ui());
+    }
+
+    /**
+     * Creates Damien using the given file and user interface.
+     *
+     * @param filePath the path of the task data file
+     * @param ui the interface that receives user-facing messages
+     */
+    public Damien(String filePath, Ui ui) {
+        this.ui = ui;
         storage = new Storage(Paths.get(filePath));
         parser = new Parser();
         try {
@@ -64,25 +74,43 @@ public class Damien {
      * Starts Damien and processes commands until the user says goodbye.
      */
     public void run() {
-        ui.showWelcome(storage.getCorruptedRecordCount());
+        showWelcome();
 
         while (ui.hasNextLine()) {
             String command = ui.readCommand();
             ui.showLine();
 
-            try {
-                Command parsedCommand = parser.parse(command);
-                if (parsedCommand.getType() == CommandType.BYE) {
-                    ui.showGoodbye();
-                    break;
-                }
-                commandHandler.handle(parsedCommand);
-            } catch (DamienException exception) {
-                ui.showError(exception);
+            if (!processCommand(command)) {
+                break;
             }
 
             ui.showLine();
         }
+    }
+
+    /** Displays the startup message for the current application state. */
+    public void showWelcome() {
+        ui.showWelcome(storage.getCorruptedRecordCount());
+    }
+
+    /**
+     * Processes one command without assuming a particular user interface.
+     *
+     * @param command the complete command entered by the user
+     * @return false when the command was {@code bye}; true otherwise
+     */
+    public boolean processCommand(String command) {
+        try {
+            Command parsedCommand = parser.parse(command);
+            if (parsedCommand.getType() == CommandType.BYE) {
+                ui.showGoodbye();
+                return false;
+            }
+            commandHandler.handle(parsedCommand);
+        } catch (DamienException exception) {
+            ui.showError(exception);
+        }
+        return true;
     }
 
     /**
@@ -91,6 +119,6 @@ public class Damien {
      * @param args command-line arguments, which are not used by Damien
      */
     public static void main(String[] args) {
-        new Damien(DATA_FILE).run();
+        new Damien(DEFAULT_DATA_FILE).run();
     }
 }

@@ -1,5 +1,43 @@
 # Damien User Guide
 
+## Using the GUI
+
+Damien's main interface is a JavaFX window. Start it from the project root
+with:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+./gradlew run
+```
+
+The workspace can be resized to suit a user's screen. Damien keeps the
+conversation readable while the command field and `Send` button remain
+anchored to the bottom of the window.
+
+User commands and Damien's responses use separate high-contrast message
+bubbles, with compact avatars, readable upright text, and spacing designed for
+quick scanning. The interface uses a familiar office-style sans-serif font
+stack with dark text for comfortable reading.
+Damien uses a friendly robot portrait, while user messages use a gender-neutral
+office-worker portrait; both avatars share the same transparent cartoon style
+and face toward their speech bubbles.
+The header has a dedicated content area so the startup greeting remains fully
+visible below it, while the command bar keeps the input field and `Send` action
+together.
+Numbered task-list responses use a monospace font so their status markers and
+details are easier to scan.
+The GUI omits the separator lines used by the deprecated CLI, keeping each
+conversation bubble focused on the actual message.
+Conversation bubbles also size themselves for multiline responses such as the
+startup greeting, and the conversation starts at the greeting instead of
+opening scrolled past it.
+
+Enter the same commands described below in the text box. Press `Enter` or
+click `Send` to submit a command; both the command and Damien's response are
+shown in the conversation area. The conversation scrolls automatically as it
+grows. Entering `bye` displays Damien's goodbye message and closes the window.
+The old text UI is deprecated and can be run with `./gradlew runCli`.
+
 Damien keeps a list of three kinds of tasks: ToDos, deadlines, and events.
 
 ## Adding a ToDo

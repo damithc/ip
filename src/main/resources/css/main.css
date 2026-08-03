@@ -1,0 +1,124 @@
+/*
+ * Base styling for Damien's task workspace.
+ *
+ * The colours are intentionally quiet and high-contrast so the conversation
+ * remains comfortable to read during a workday.
+ */
+.root {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Helvetica Neue", "Helvetica", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-style: normal;
+}
+
+.workspace-header {
+    -fx-background-color: #172033;
+    -fx-border-color: #172033;
+    -fx-padding: 18px 28px 16px 28px;
+}
+
+.workspace-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.workspace-subtitle {
+    -fx-font-size: 13px;
+    -fx-font-style: normal;
+    -fx-text-fill: #d3dceb;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-padding: 20px 24px 16px 24px;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 4px 0 0;
+    -fx-pref-width: 12px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c5d0df;
+    -fx-background-radius: 6px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #aab8cb;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9px;
+    -fx-border-color: #d7e0eb;
+    -fx-border-radius: 9px;
+    -fx-border-width: 1px;
+    -fx-padding: 0 14px;
+    -fx-text-fill: #172033;
+    -fx-prompt-text-fill: #334155;
+    -fx-font-size: 15px;
+    -fx-font-style: normal;
+}
+
+.text-field:focused {
+    -fx-border-color: #2f6fed;
+    -fx-effect: dropshadow(gaussian, rgba(47, 111, 237, 0.18), 9, 0.25, 0, 1);
+}
+
+.command-bar {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-border-color: #d7e0eb;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(23, 32, 51, 0.12), 10, 0.2, 0, 2);
+    -fx-padding: 7px;
+}
+
+.command-bar .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+.command-bar .text-field:focused {
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+.button {
+    -fx-background-color: #2f6fed;
+    -fx-background-radius: 9px;
+    -fx-border-radius: 9px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-style: normal;
+    -fx-text-fill: #ffffff;
+}
+
+.button:hover {
+    -fx-background-color: #245dcc;
+}
+
+.button:pressed {
+    -fx-background-color: #194aab;
+}
+
+.button:disabled {
+    -fx-background-color: #aebbd0;
+    -fx-text-fill: #eef2f7;
+}

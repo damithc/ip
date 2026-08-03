@@ -25,6 +25,8 @@ Numbered task-list responses use a monospace font so their status markers and
 details are easier to scan.
 The GUI omits the separator lines used by the deprecated CLI, keeping each
 conversation bubble focused on the actual message.
+Conversation bubbles also size themselves for multiline responses such as the
+startup greeting.
 
 Enter the same commands described below in the text box. Press `Enter` or
 click `Send` to submit a command; both the command and Damien's response are

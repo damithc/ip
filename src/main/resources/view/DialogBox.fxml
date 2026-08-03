@@ -17,8 +17,7 @@
         <Label fx:id="dialog"
                styleClass="message-label"
                text="Label"
-               wrapText="true"
-               minHeight="-Infinity" />
+               wrapText="true" />
         <ImageView fx:id="displayPicture"
                    styleClass="avatar"
                    fitHeight="99.0"

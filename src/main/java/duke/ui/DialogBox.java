@@ -9,10 +9,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Represents a conversation message with an avatar and message text.
@@ -23,7 +24,7 @@ public class DialogBox extends HBox {
 
     /** The label containing the message text. */
     @FXML
-    private Label dialog;
+    private TextFlow dialog;
 
     /** The avatar shown beside the message text. */
     @FXML
@@ -47,7 +48,9 @@ public class DialogBox extends HBox {
         }
 
         getStyleClass().add("dialog-box");
-        dialog.setText(text);
+        Text messageText = new Text(text);
+        messageText.getStyleClass().add("message-text");
+        dialog.getChildren().setAll(messageText);
         displayPicture.setImage(image);
     }
 

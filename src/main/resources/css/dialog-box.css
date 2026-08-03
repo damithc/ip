@@ -13,12 +13,15 @@
     -fx-border-width: 1px;
     -fx-max-width: 600px;
     -fx-padding: 11px 15px;
+    -fx-line-spacing: 2px;
+}
+
+.dialog-box .message-label .message-text {
+    -fx-fill: #0f172a;
     -fx-font-family: "Helvetica Neue", "Helvetica", "Segoe UI", sans-serif;
-    -fx-text-fill: #0f172a;
     -fx-font-size: 14px;
     -fx-font-style: normal;
     -fx-font-weight: normal;
-    -fx-line-spacing: 2px;
 }
 
 .dialog-box.user-dialog {
@@ -28,7 +31,10 @@
 .dialog-box.user-dialog .message-label {
     -fx-background-color: #2f6fed;
     -fx-border-color: #2f6fed;
-    -fx-text-fill: #ffffff;
+}
+
+.dialog-box.user-dialog .message-label .message-text {
+    -fx-fill: #ffffff;
 }
 
 .dialog-box.damien-dialog .message-label {
@@ -36,9 +42,12 @@
 }
 
 .dialog-box.task-list-dialog .message-label {
+    -fx-line-spacing: 1px;
+}
+
+.dialog-box.task-list-dialog .message-label .message-text {
     -fx-font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
     -fx-font-size: 13px;
-    -fx-line-spacing: 1px;
 }
 
 .dialog-box .avatar {

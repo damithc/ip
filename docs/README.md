@@ -14,6 +14,9 @@ The workspace can be resized to suit a user's screen. Damien keeps the
 conversation readable while the command field and `Send` button remain
 anchored to the bottom of the window.
 
+User commands and Damien's responses use separate high-contrast message
+bubbles, with compact avatars and spacing designed for quick scanning.
+
 Enter the same commands described below in the text box. Press `Enter` or
 click `Send` to submit a command; both the command and Damien's response are
 shown in the conversation area. The conversation scrolls automatically as it

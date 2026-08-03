@@ -45,7 +45,8 @@ markers printed by Damien.
 Run the GUI with `./gradlew run` and verify that the following interactions are
 visible in the conversation area. Resize the window as part of the smoke check
 and confirm that the conversation area grows while the command controls stay
-anchored at the bottom:
+anchored at the bottom. Confirm that user commands and Damien's responses are
+visually distinct and remain readable:
 
 | Input | Expected GUI behavior |
 | --- | --- |

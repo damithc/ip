@@ -43,6 +43,7 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Could not load the dialog box view.", exception);
         }
 
+        getStyleClass().add("dialog-box");
         dialog.setText(text);
         displayPicture.setImage(image);
     }
@@ -65,7 +66,9 @@ public class DialogBox extends HBox {
      * @return a right-aligned user dialog box
      */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.getStyleClass().add("user-dialog");
+        return dialogBox;
     }
 
     /**
@@ -78,6 +81,7 @@ public class DialogBox extends HBox {
     public static DialogBox getDamienDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        dialogBox.getStyleClass().add("damien-dialog");
         return dialogBox;
     }
 }

@@ -1,0 +1,37 @@
+/* Conversation message styling. The role classes are added by DialogBox. */
+.dialog-box {
+    -fx-alignment: center-left;
+    -fx-padding: 8px 24px;
+    -fx-spacing: 12px;
+}
+
+.dialog-box .message-label {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-border-color: #dbe3ee;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-max-width: 600px;
+    -fx-padding: 11px 15px;
+    -fx-text-fill: #263348;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+}
+
+.dialog-box.user-dialog {
+    -fx-alignment: center-right;
+}
+
+.dialog-box.user-dialog .message-label {
+    -fx-background-color: #2f6fed;
+    -fx-border-color: #2f6fed;
+    -fx-text-fill: #ffffff;
+}
+
+.dialog-box.damien-dialog .message-label {
+    -fx-background-color: #ffffff;
+}
+
+.dialog-box .avatar {
+    -fx-effect: dropshadow(gaussian, rgba(23, 32, 51, 0.18), 7, 0.2, 0, 2);
+}

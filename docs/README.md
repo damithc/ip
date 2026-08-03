@@ -1,151 +1,85 @@
 # Damien User Guide
 
-## Using the GUI
+Damien is a desktop task assistant for managing ToDos, deadlines, and events.
+This guide is for users running the released JAR file.
 
-Damien's main interface is a JavaFX window. Start it from the project root
-with:
+## Requirements
 
-```bash
-sdk use java 25.0.3.fx-zulu
-./gradlew run
-```
-
-The workspace can be resized to suit a user's screen. Damien keeps the
-conversation readable while the command field and `Send` button remain
-anchored to the bottom of the window.
-
-User commands and Damien's responses use separate high-contrast message
-bubbles, with compact avatars, readable upright text, and spacing designed for
-quick scanning. The interface uses a familiar office-style sans-serif font
-stack with dark text for comfortable reading.
-Damien uses a friendly robot portrait, while user messages use a gender-neutral
-office-worker portrait; both avatars share the same transparent cartoon style
-and face toward their speech bubbles.
-The header has a dedicated content area so the startup greeting remains fully
-visible below it, while the command bar keeps the input field and `Send` action
-together.
-Numbered task-list responses use a monospace font so their status markers and
-details are easier to scan.
-The GUI omits the separator lines used by the deprecated CLI, keeping each
-conversation bubble focused on the actual message.
-Conversation bubbles also size themselves for multiline responses such as the
-startup greeting, and the conversation starts at the greeting instead of
-opening scrolled past it.
-
-Enter the same commands described below in the text box. Press `Enter` or
-click `Send` to submit a command; both the command and Damien's response are
-shown in the conversation area. The conversation scrolls automatically as it
-grows. Entering `bye` displays Damien's goodbye message and closes the window.
-The old text UI is deprecated and can be run with `./gradlew runCli`.
-
-Damien keeps a list of three kinds of tasks: ToDos, deadlines, and events.
-
-## Checking code style
-
-Checkstyle checks both production and test Java sources against the SE-EDU Java
-coding standard. From the project root, run:
+Damien requires Java 25 or later. Check whether Java is installed by running:
 
 ```bash
-sdk use java 25.0.3.fx-zulu
-./gradlew checkstyleMain checkstyleTest
+java --version
 ```
 
-The regular `./gradlew check` task runs these checks as well. The configuration
-files are in `config/checkstyle` for use with Gradle or the Checkstyle-IDEA
-plugin.
+You do not need Gradle, IntelliJ IDEA, or the project source code. The release
+JAR includes Damien's JavaFX dependencies.
 
-## Continuous integration
+## Downloading and starting Damien
 
-GitHub Actions runs the workflow in `.github/workflows/gradle.yml` for every
-push and pull request. It runs `./gradlew check` on Ubuntu, macOS, and Windows
-using Zulu JDK 25 with JavaFX, so compilation, JUnit tests, and Checkstyle are
-checked consistently across platforms.
+1. Download `damien.jar` from the [latest GitHub release](https://github.com/damithc/ip/releases/latest).
+1. Create or choose a folder for Damien's saved task data, then place the JAR
+   file in that folder.
+1. Open a terminal in that folder and start Damien:
 
-## Development assertions
+   ```bash
+   java -jar damien.jar
+   ```
 
-Damien uses Java's `assert` statement to document assumptions between internal
-components, such as a valid task index or the data required by a parsed
-command. User input is still validated with user-facing errors; assertions are
-for programmer errors and unexpected internal states. Gradle enables assertions
-for `test`, `run`, and `runCli`.
+Damien opens a window with a message area, a command field, and a `Send`
+button. Enter a command in the field and press `Enter` or click `Send`.
 
-## Adding a ToDo
+### Saved tasks
 
-Use `todo` followed by a task description:
+Damien saves tasks in `data/duke.txt` below the folder where you run the
+command. The `data` folder is created automatically when you add your first
+task. Keep this file if you want to preserve your tasks, and back it up if the
+task list is important.
 
-```
-todo borrow book
-```
+To keep tasks in the same list, always start Damien from the same folder. Type
+`bye` to close the application.
 
-Damien displays the new task as follows:
+## Commands
 
-```
-[T][ ] borrow book
-```
+Commands must be entered in lowercase. Task numbers refer to the numbered list
+shown by `list`.
 
-## Adding a deadline
+| Command | Example | Description |
+| --- | --- | --- |
+| `todo <description>` | `todo borrow book` | Adds a ToDo. |
+| `deadline <description> /by <date>` | `deadline return book /by 2019-12-02` | Adds a deadline. |
+| `event <description> /from <start> /to <end>` | `event project meeting /from Mon 2pm /to 4pm` | Adds an event. |
+| `list` | `list` | Shows all tasks in their current order. |
+| `mark <number>` | `mark 1` | Marks a task as completed. |
+| `unmark <number>` | `unmark 1` | Marks a task as not completed. |
+| `delete <number>` | `delete 1` | Removes a task. |
+| `find <keyword>` | `find book` | Shows tasks whose descriptions contain the keyword. |
+| `bye` | `bye` | Closes Damien. |
 
-Use `/by` to separate the task description from the deadline. Damien stores
-the deadline as a date and displays it in a friendlier format. Use
-`yyyy-MM-dd` for a date, or add a 24-hour time in `HHmm` format:
+### Deadlines
 
-```
+Use `yyyy-MM-dd` for a date. To include a time, add it in 24-hour `HHmm`
+format:
+
+```text
 deadline return book /by 2019-12-02
+deadline submit report /by 2019-12-02 1800
 ```
 
-The task is displayed as:
+Damien also accepts the date format `d/M/yyyy` when a time is included:
 
-```
-[D][ ] return book (by: Dec 2 2019)
-```
-
-Deadlines can include a time. Damien accepts both the ISO-style date and the
-original day/month/year form:
-
-```
-deadline return book /by 2019-12-02 1800
+```text
 deadline submit report /by 2/12/2019 1800
 ```
 
-The second task is displayed as:
+### Task status
 
-```
-[D][ ] submit report (by: Dec 2 2019, 6:00 PM)
-```
+Damien displays tasks with a type marker and a completion marker:
 
-## Adding an event
-
-Use `/from` and `/to` to specify the start and end date or time:
-
-```
-event project meeting /from Mon 2pm /to 4pm
-```
-
-The task is displayed as:
-
-```
+```text
+[T][ ] borrow book
+[D][X] return book (by: Dec 2 2019)
 [E][ ] project meeting (from: Mon 2pm to: 4pm)
 ```
 
-## Viewing and updating tasks
-
-Use `list` to view all tasks. Use `mark 1` or `unmark 1` to change the
-completion status of the first task in the list. Use `delete 1` to remove the
-first task from the list.
-
-## Finding tasks
-
-Use `find` followed by a keyword to view tasks whose descriptions contain that
-keyword. Searches are case-insensitive:
-
-```
-find book
-```
-
-Damien displays the matching tasks in their original order:
-
-```
-Here are the matching tasks in your list:
-1.[T][ ] read book
-2.[D][X] return book (by: Jun 6 2019)
-```
+`[T]`, `[D]`, and `[E]` identify ToDos, deadlines, and events. `[ ]` means
+not completed, while `[X]` means completed.

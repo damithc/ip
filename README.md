@@ -24,8 +24,9 @@ sdk use java 25.0.3.fx-zulu
 ./gradlew run
 ```
 
-Type any command in the text box and press `Enter` or click `Send`. The old
-text UI is deprecated but remains available for regression testing:
+Type any command in the text box and press `Enter` or click `Send`. Entering
+`bye` displays Damien's goodbye message and closes the window. The old text UI
+is deprecated but remains available for regression testing:
 
 ```bash
 ./gradlew runCli

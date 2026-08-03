@@ -40,6 +40,17 @@ expected output fragments below are assertions used to detect regressions;
 compare the actual wording, spacing, separators, task numbering, and status
 markers printed by Damien.
 
+## GUI-specific smoke checks
+
+Run the GUI with `./gradlew run` and verify that the following interactions are
+visible in the conversation area:
+
+| Input | Expected GUI behavior |
+| --- | --- |
+| `list` submitted with `Enter` | The command and `Here are the tasks in your list:` are displayed. |
+| `find gui` submitted with `Send` | The command and `Here are the matching tasks in your list:` are displayed. |
+| `bye` | Damien's goodbye message is displayed and the window closes. |
+
 ## Test cases in execution order
 
 The startup greeting is checked before the first input. The following cases

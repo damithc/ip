@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 
 /**
  * Controller for Damien's main JavaFX window.
@@ -79,6 +80,17 @@ public class MainWindow extends AnchorPane {
         if (!isRunning) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
+            closeWindow();
+        }
+    }
+
+    /** Closes the JavaFX window after Damien processes the {@code bye} command. */
+    private void closeWindow() {
+        if (userInput.getScene() != null) {
+            Window window = userInput.getScene().getWindow();
+            if (window != null) {
+                window.hide();
+            }
         }
     }
 

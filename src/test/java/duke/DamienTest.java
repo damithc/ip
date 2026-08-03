@@ -22,7 +22,7 @@ public class DamienTest {
      * processing logic and that {@code bye} terminates the session.
      */
     @Test
-    public void guiUiReceivesCommandResponses() {
+    public void guiUiReceivesCommandResponsesAndByeStopsSession() {
         GuiUi guiUi = new GuiUi();
         Damien damien = new Damien(temporaryDirectory.resolve("tasks.txt").toString(), guiUi);
 

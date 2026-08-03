@@ -108,10 +108,7 @@ public class Ui {
      * @param tasks the tasks to display
      */
     public void showTaskList(TaskList tasks) {
-        printLine("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            printLine((i + 1) + "." + tasks.get(i));
-        }
+        showTasks("Here are the tasks in your list:", tasks);
     }
 
     /**
@@ -120,7 +117,17 @@ public class Ui {
      * @param tasks the matching tasks to display
      */
     public void showMatchingTasks(TaskList tasks) {
-        printLine("Here are the matching tasks in your list:");
+        showTasks("Here are the matching tasks in your list:", tasks);
+    }
+
+    /**
+     * Displays a heading followed by tasks in their numbered order.
+     *
+     * @param heading the heading to display before the tasks
+     * @param tasks the tasks to display
+     */
+    private void showTasks(String heading, TaskList tasks) {
+        printLine(heading);
         for (int i = 0; i < tasks.size(); i++) {
             printLine((i + 1) + "." + tasks.get(i));
         }

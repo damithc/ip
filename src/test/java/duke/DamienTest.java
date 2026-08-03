@@ -40,6 +40,11 @@ public class DamienTest {
         assertTrue(damien.processCommand("list"));
         assertTrue(guiUi.consumeOutput().contains("1.[T][ ] read book"));
 
+        assertTrue(damien.processCommand("find book"));
+        String findResponse = guiUi.consumeOutput();
+        assertTrue(findResponse.contains("Here are the matching tasks in your list:"));
+        assertTrue(findResponse.contains("1.[T][ ] read book"));
+
         assertFalse(damien.processCommand("bye"));
         assertTrue(guiUi.consumeOutput().contains("Bye. Hope to see you again soon!"));
     }

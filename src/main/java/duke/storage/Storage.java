@@ -34,6 +34,7 @@ public class Storage {
      * @param filePath the path of the task data file
      */
     public Storage(Path filePath) {
+        assert filePath != null : "Storage must have a data file path.";
         this.filePath = filePath;
         taskFactory = new TaskFactory();
     }
@@ -92,6 +93,7 @@ public class Storage {
      * @throws DamienException if the data file cannot be written
      */
     public void save(TaskList tasks) throws DamienException {
+        assert tasks != null : "Storage cannot save a null task list.";
         try {
             Path parentDirectory = filePath.getParent();
             if (parentDirectory != null) {

@@ -36,6 +36,7 @@ public class CommandHandler {
      * @throws DamienException if the command is invalid
      */
     public void handle(Command command) throws DamienException {
+        assert command != null : "The command handler must receive a parsed command.";
         switch (command.getType()) {
             case LIST:
                 ui.showTaskList(taskService.getTasks());

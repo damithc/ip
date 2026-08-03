@@ -44,12 +44,21 @@ The Gradle test task:
 
 The Checkstyle tasks verify that both the main and test Java sources follow the
 SE-EDU Java coding standard. The regular `./gradlew check` task runs the JUnit
-and Checkstyle checks together.
+and Checkstyle checks together. Gradle also enables Java assertions for the
+tests and both application entry points, so the assertion-based internal
+assumptions are exercised during the normal workflow.
 
 The executable's output remains authoritative for the end-to-end CLI run. The
 expected output fragments below are assertions used to detect regressions;
 compare the actual wording, spacing, separators, task numbering, and status
 markers printed by Damien.
+
+## Assertion checks
+
+The JUnit suite includes a check that constructing a task command without its
+required task index raises an `AssertionError`. The normal command-processing
+tests additionally exercise assertions for parsed command payloads, task-list
+indexes, storage records, and task state transitions.
 
 ## GUI-specific smoke checks
 

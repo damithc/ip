@@ -39,6 +39,7 @@ public enum CommandType {
      * @return the matching command type, or {@code null} when the input is unknown
      */
     public static CommandType fromInput(String input) {
+        assert input != null : "Command input must not be null.";
         for (CommandType commandType : values()) {
             if (commandType.matches(input)) {
                 return commandType;

@@ -54,6 +54,14 @@ The regular `./gradlew check` task runs these checks as well. The configuration
 files are in `config/checkstyle` for use with Gradle or the Checkstyle-IDEA
 plugin.
 
+## Development assertions
+
+Damien uses Java's `assert` statement to document assumptions between internal
+components, such as a valid task index or the data required by a parsed
+command. User input is still validated with user-facing errors; assertions are
+for programmer errors and unexpected internal states. Gradle enables assertions
+for `test`, `run`, and `runCli`.
+
 ## Adding a ToDo
 
 Use `todo` followed by a task description:

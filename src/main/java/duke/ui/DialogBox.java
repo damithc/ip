@@ -37,6 +37,7 @@ public class DialogBox extends HBox {
      * @param image the avatar to display
      */
     private DialogBox(String text, Image image) {
+        assert text != null && image != null : "A dialog box needs text and an avatar.";
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
                     MainWindow.class.getResource("/view/DialogBox.fxml"));
@@ -47,6 +48,8 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Could not load the dialog box view.", exception);
         }
 
+        assert dialog != null && displayPicture != null
+                : "The dialog box FXML must provide its text and image controls.";
         getStyleClass().add("dialog-box");
         Text messageText = new Text(text);
         messageText.getStyleClass().add("message-text");
@@ -101,6 +104,7 @@ public class DialogBox extends HBox {
      * @return true if the response contains a formatted task row
      */
     static boolean containsTaskListRows(String text) {
+        assert text != null : "A dialog response must not be null.";
         return text.lines().anyMatch(line -> line.matches("\\d+\\.\\[[TDE]\\]\\[[ X]\\].*"));
     }
 }

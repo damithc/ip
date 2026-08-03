@@ -12,6 +12,21 @@ import duke.task.Todo;
  * {@link Storage}, allowing storage to focus on reading and writing files.</p>
  */
 public class TaskFactory {
+    /** Record marker used for ToDo tasks. */
+    private static final String TODO_RECORD_TYPE = "T";
+
+    /** Record marker used for deadline tasks. */
+    private static final String DEADLINE_RECORD_TYPE = "D";
+
+    /** Record marker used for event tasks. */
+    private static final String EVENT_RECORD_TYPE = "E";
+
+    /** Status marker used for incomplete tasks. */
+    private static final String INCOMPLETE_STATUS = "0";
+
+    /** Status marker used for completed tasks. */
+    private static final String COMPLETED_STATUS = "1";
+
     /**
      * Creates a task from one saved record.
      *
@@ -27,19 +42,19 @@ public class TaskFactory {
         String type = fields[0];
         String status = fields[1];
         String description = fields[2];
-        if (description.isEmpty() || !(status.equals("0") || status.equals("1"))) {
+        if (description.isEmpty() || !isValidStatus(status)) {
             return null;
         }
 
         Task task;
         switch (type) {
-            case "T":
+            case TODO_RECORD_TYPE:
                 if (fields.length != 3) {
                     return null;
                 }
                 task = new Todo(description);
                 break;
-            case "D":
+            case DEADLINE_RECORD_TYPE:
                 if (fields.length != 4 || fields[3].isEmpty()) {
                     return null;
                 }
@@ -49,7 +64,7 @@ public class TaskFactory {
                     return null;
                 }
                 break;
-            case "E":
+            case EVENT_RECORD_TYPE:
                 if (fields.length != 5 || fields[3].isEmpty() || fields[4].isEmpty()) {
                     return null;
                 }
@@ -59,9 +74,19 @@ public class TaskFactory {
                 return null;
         }
 
-        if (status.equals("1")) {
+        if (COMPLETED_STATUS.equals(status)) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /**
+     * Checks whether a saved status marker is supported by the storage format.
+     *
+     * @param status the saved completion marker
+     * @return true when the marker represents an incomplete or completed task
+     */
+    private static boolean isValidStatus(String status) {
+        return INCOMPLETE_STATUS.equals(status) || COMPLETED_STATUS.equals(status);
     }
 }

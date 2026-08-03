@@ -43,6 +43,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    enableAssertions = true
 
     testLogging {
         events 'passed', 'skipped', 'failed'
@@ -53,6 +54,10 @@ test {
         showStackTraces = true
         showStandardStreams = false
     }
+}
+
+tasks.withType(JavaExec).configureEach {
+    enableAssertions = true
 }
 
 application {

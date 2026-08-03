@@ -70,10 +70,46 @@ public class Command {
      * @param keyword the search keyword, if any
      */
     private Command(CommandType type, Integer taskIndex, Task task, String keyword) {
+        assert isValidCommandData(type, taskIndex, task, keyword)
+                : "A command's data must match its command type.";
         this.type = type;
         this.taskIndex = taskIndex;
         this.task = task;
         this.keyword = keyword;
+    }
+
+    /**
+     * Checks the invariant that each command type carries only the data it needs.
+     *
+     * @param type the command type
+     * @param taskIndex the referenced task index, if any
+     * @param task the new task, if any
+     * @param keyword the search keyword, if any
+     * @return whether the command data is valid for the command type
+     */
+    private static boolean isValidCommandData(CommandType type, Integer taskIndex,
+                                              Task task, String keyword) {
+        if (type == null) {
+            return false;
+        }
+
+        switch (type) {
+            case MARK:
+            case UNMARK:
+            case DELETE:
+                return taskIndex != null && taskIndex >= 0 && task == null && keyword == null;
+            case FIND:
+                return taskIndex == null && task == null && keyword != null && !keyword.isBlank();
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                return taskIndex == null && task != null && keyword == null;
+            case BYE:
+            case LIST:
+                return taskIndex == null && task == null && keyword == null;
+            default:
+                return false;
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ public class TaskService {
      * @param storage the storage used to persist changes
      */
     public TaskService(TaskList tasks, Storage storage) {
+        assert tasks != null && storage != null : "A task service needs tasks and storage.";
         this.tasks = tasks;
         this.storage = storage;
     }
@@ -55,6 +56,7 @@ public class TaskService {
      * @return the matching tasks in their original order
      */
     public TaskList find(String keyword) {
+        assert keyword != null : "A task search keyword must not be null.";
         return tasks.find(keyword);
     }
 
@@ -65,7 +67,9 @@ public class TaskService {
      * @throws DamienException if the updated list cannot be saved
      */
     public void add(Task task) throws DamienException {
+        assert task != null : "The task service cannot add a null task.";
         tasks.add(task);
+        assert tasks.get(tasks.size() - 1) == task : "Adding a task must append it to the list.";
         storage.save(tasks);
     }
 
@@ -79,6 +83,7 @@ public class TaskService {
     public Task markAsDone(int taskIndex) throws DamienException {
         Task task = getTask(taskIndex);
         tasks.markAsDone(taskIndex);
+        assert task.isDone() : "A task marked as done must be complete.";
         storage.save(tasks);
         return task;
     }
@@ -93,6 +98,7 @@ public class TaskService {
     public Task unmark(int taskIndex) throws DamienException {
         Task task = getTask(taskIndex);
         tasks.unmark(taskIndex);
+        assert !task.isDone() : "An unmarked task must be incomplete.";
         storage.save(tasks);
         return task;
     }
@@ -105,8 +111,9 @@ public class TaskService {
      * @throws DamienException if the index is invalid or the list cannot be saved
      */
     public Task delete(int taskIndex) throws DamienException {
-        getTask(taskIndex);
+        Task task = getTask(taskIndex);
         Task deletedTask = tasks.remove(taskIndex);
+        assert deletedTask == task : "Deleting an index must return the task at that index.";
         storage.save(tasks);
         return deletedTask;
     }
@@ -122,7 +129,9 @@ public class TaskService {
         if (!tasks.isValidIndex(taskIndex)) {
             throw invalidTaskIndexException(taskIndex);
         }
-        return tasks.get(taskIndex);
+        Task task = tasks.get(taskIndex);
+        assert task != null : "Every valid task index must contain a task.";
+        return task;
     }
 
     /**

@@ -27,6 +27,7 @@ public class TaskList {
      * @param task the task to add
      */
     public void add(Task task) {
+        assert task != null : "A task list cannot contain a null task.";
         tasks.add(task);
     }
 
@@ -37,6 +38,7 @@ public class TaskList {
      * @return the task at the given index
      */
     public Task get(int index) {
+        assert isValidIndex(index) : "Task access requires a valid zero-based index.";
         return tasks.get(index);
     }
 
@@ -47,6 +49,7 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int index) {
+        assert isValidIndex(index) : "Task removal requires a valid zero-based index.";
         return tasks.remove(index);
     }
 
@@ -77,6 +80,7 @@ public class TaskList {
      * @return a task list containing the matching tasks
      */
     public TaskList find(String keyword) {
+        assert keyword != null : "A task search keyword must not be null.";
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
         TaskList matchingTasks = new TaskList();
         for (Task task : tasks) {
@@ -93,6 +97,7 @@ public class TaskList {
      * @param index the zero-based task index
      */
     public void markAsDone(int index) {
+        assert isValidIndex(index) : "Marking a task requires a valid zero-based index.";
         tasks.get(index).markAsDone();
     }
 
@@ -102,6 +107,7 @@ public class TaskList {
      * @param index the zero-based task index
      */
     public void unmark(int index) {
+        assert isValidIndex(index) : "Unmarking a task requires a valid zero-based index.";
         tasks.get(index).unmark();
     }
 }

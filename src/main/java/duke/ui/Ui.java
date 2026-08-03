@@ -36,6 +36,7 @@ public class Ui {
      * @param output the stream that receives user-facing messages
      */
     public Ui(PrintStream output) {
+        assert output != null : "The user interface needs an output stream.";
         scanner = new Scanner(System.in);
         this.output = output;
     }
@@ -99,6 +100,7 @@ public class Ui {
      * @param exception the error to explain to the user
      */
     public void showError(DamienException exception) {
+        assert exception != null : "The user interface must receive an application error.";
         printLine(" OOPS!!! " + exception.getMessage());
     }
 
@@ -108,6 +110,7 @@ public class Ui {
      * @param tasks the tasks to display
      */
     public void showTaskList(TaskList tasks) {
+        assert tasks != null : "The user interface must receive a task list to display.";
         printLine("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             printLine((i + 1) + "." + tasks.get(i));
@@ -120,6 +123,7 @@ public class Ui {
      * @param tasks the matching tasks to display
      */
     public void showMatchingTasks(TaskList tasks) {
+        assert tasks != null : "The user interface must receive matching tasks to display.";
         printLine("Here are the matching tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             printLine((i + 1) + "." + tasks.get(i));

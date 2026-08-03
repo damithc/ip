@@ -19,6 +19,7 @@ public class TaskFactory {
      * @return the parsed task, or {@code null} when the record is invalid
      */
     public Task createFromStorage(String line) {
+        assert line != null : "A stored task record must not be null.";
         String[] fields = line.split("\\s*\\|\\s*", -1);
         if (fields.length < 3) {
             return null;
@@ -59,9 +60,11 @@ public class TaskFactory {
                 return null;
         }
 
-        if (status.equals("1")) {
+        boolean shouldBeDone = status.equals("1");
+        if (shouldBeDone) {
             task.markAsDone();
         }
+        assert task.isDone() == shouldBeDone : "A task must preserve its stored completion status.";
         return task;
     }
 }

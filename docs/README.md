@@ -1,5 +1,20 @@
 # Damien User Guide
 
+## Using the GUI
+
+Damien's main interface is a JavaFX window. Start it from the project root
+with:
+
+```bash
+sdk use java 25.0.3.fx-zulu
+./gradlew run
+```
+
+Enter the same commands described below in the text box. Press `Enter` or
+click `Send` to submit a command; both the command and Damien's response are
+shown in the conversation area. The conversation scrolls automatically as it
+grows. The old text UI is deprecated and can be run with `./gradlew runCli`.
+
 Damien keeps a list of three kinds of tasks: ToDos, deadlines, and events.
 
 ## Adding a ToDo

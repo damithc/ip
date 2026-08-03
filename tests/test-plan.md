@@ -2,34 +2,43 @@
 
 ## Purpose
 
-This plan describes the end-to-end CLI test run performed by an AI. It covers
+This plan describes the end-to-end command-processing test run performed by an
+AI. It covers
 the normal commands documented in `docs/README.md`, malformed commands, and
 invalid task numbers. The cases are run in one session so that negative cases
 also verify that an error does not change the task list or later task state.
+The GUI uses the same command-processing path, so these cases remain useful
+regression coverage even though the CLI is deprecated.
 
 ## Test method
 
-The AI runs the test from the project root with:
+The AI runs the JUnit and JavaFX-aware compilation tests from the project root
+with:
 
 ```bash
-python3 .codex/skills/test-cli/scripts/run_cli_tests.py
+sdk use java 25.0.3.fx-zulu
+./gradlew test
 ```
 
-The runner:
+For the end-to-end CLI session represented by the table, use the deprecated
+Gradle task below and provide the inputs in order (or redirect a prepared input
+file to it):
 
-1. Reads the ordered test-case table below from this file.
-2. Compiles every Java source file under `src/main/java` with
-   `javac -Xlint:all` into a temporary classes directory.
-3. Starts `Damien` and sends the inputs below, one line at a time, in a
-   single process.
-4. Prints the actual output next to the input that produced it.
-5. Checks each response against that test case's expected output fragments as
-   soon as it is produced, stopping immediately at the first failed case.
-6. Checks the startup greeting and requires a normal exit when all cases pass.
+```bash
+./gradlew runCli
+```
 
-The executable's output is authoritative. The expected output fragments below
-are assertions used to detect regressions; the AI reports the actual wording,
-spacing, separators, task numbering, and status markers printed by Damien.
+The Gradle test task:
+
+1. Compiles the CLI and JavaFX sources with the JavaFX dependencies declared in
+   `build.gradle`.
+2. Runs the JUnit tests, including command-processing coverage used by the
+   GUI.
+
+The executable's output remains authoritative for the end-to-end CLI run. The
+expected output fragments below are assertions used to detect regressions;
+compare the actual wording, spacing, separators, task numbering, and status
+markers printed by Damien.
 
 ## Test cases in execution order
 
@@ -85,13 +94,12 @@ the response for that row.
 
 ## Pass criteria
 
-The script reports `PASS` only when compilation succeeds, the startup greeting
-is present in every session, every response contains all of its expected output
-fragments, Damien exits with status 0, and all 41 main-session inputs plus the
-11 persistence-session inputs and the 2 corrupted-data inputs complete. At the first missing output fragment,
-it stops before sending later inputs and reports the expected fragments
-alongside the actual response. Any compiler, runtime, or missing-output failure
-means that the test run did not pass.
+The Gradle test run passes when compilation succeeds and every JUnit test
+passes. The manual CLI run passes when the startup greeting is present, every
+response contains its expected output fragments, Damien exits with status 0,
+and all 41 main-session inputs complete. Run the persistence and corrupted-data
+cases in fresh CLI sessions when checking storage behavior. Any compiler,
+runtime, or missing-output failure means that the test run did not pass.
 
 ## Persistence test cases in execution order
 
@@ -116,9 +124,9 @@ ToDos, deadlines, and events, as well as add, mark, delete, and unmark changes.
 
 ## Corrupted data test cases
 
-The test runner creates a separate temporary runtime with two valid records
-and two malformed records before starting Damien. Damien must warn about the
-malformed records, keep the valid records, and continue accepting commands.
+Create a separate runtime with two valid records and two malformed records
+before starting the CLI. Damien must warn about the malformed records, keep the
+valid records, and continue accepting commands.
 The startup output must contain `Warning: I found 2 invalid saved task records and skipped them.`
 
 | Order | Input | Expected output fragments |

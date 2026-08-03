@@ -1,5 +1,6 @@
 package duke.ui;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import duke.exception.DamienException;
@@ -19,11 +20,33 @@ public class Ui {
     /** Reads commands entered by the user. */
     private final Scanner scanner;
 
+    /** Receives formatted output for the selected user interface. */
+    private final PrintStream output;
+
     /**
      * Creates a user interface that reads from standard input.
      */
     public Ui() {
+        this(System.out);
+    }
+
+    /**
+     * Creates a user interface that writes to the given output stream.
+     *
+     * @param output the stream that receives user-facing messages
+     */
+    public Ui(PrintStream output) {
         scanner = new Scanner(System.in);
+        this.output = output;
+    }
+
+    /**
+     * Prints one line of user-facing output.
+     *
+     * @param line the line to print
+     */
+    protected void printLine(String line) {
+        output.println(line);
     }
 
     /**
@@ -51,8 +74,8 @@ public class Ui {
      */
     public void showWelcome(int corruptedRecordCount) {
         showLine();
-        System.out.println("Hello! I'm Damien");
-        System.out.println("What can I do for you?");
+        printLine("Hello! I'm Damien");
+        printLine("What can I do for you?");
         if (corruptedRecordCount > 0) {
             showCorruptionWarning(corruptedRecordCount);
         }
@@ -61,12 +84,12 @@ public class Ui {
 
     /** Prints the separator used around a chatbot response. */
     public void showLine() {
-        System.out.println(LINE);
+        printLine(LINE);
     }
 
     /** Displays Damien's goodbye message. */
     public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
+        printLine("Bye. Hope to see you again soon!");
         showLine();
     }
 
@@ -76,7 +99,7 @@ public class Ui {
      * @param exception the error to explain to the user
      */
     public void showError(DamienException exception) {
-        System.out.println(" OOPS!!! " + exception.getMessage());
+        printLine(" OOPS!!! " + exception.getMessage());
     }
 
     /**
@@ -85,9 +108,9 @@ public class Ui {
      * @param tasks the tasks to display
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println("Here are the tasks in your list:");
+        printLine("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            printLine((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -97,9 +120,9 @@ public class Ui {
      * @param tasks the matching tasks to display
      */
     public void showMatchingTasks(TaskList tasks) {
-        System.out.println("Here are the matching tasks in your list:");
+        printLine("Here are the matching tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            printLine((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -110,9 +133,9 @@ public class Ui {
      * @param taskCount the updated number of tasks
      */
     public void showTaskAdded(Task task, int taskCount) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        printLine("Got it. I've added this task:");
+        printLine("  " + task);
+        printLine("Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -121,8 +144,8 @@ public class Ui {
      * @param task the task that was marked as done
      */
     public void showTaskMarkedAsDone(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("  " + task);
+        printLine("Nice! I've marked this task as done:");
+        printLine("  " + task);
     }
 
     /**
@@ -131,8 +154,8 @@ public class Ui {
      * @param task the task that was unmarked
      */
     public void showTaskUnmarked(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("  " + task);
+        printLine("OK, I've marked this task as not done yet:");
+        printLine("  " + task);
     }
 
     /**
@@ -142,9 +165,9 @@ public class Ui {
      * @param taskCount the updated number of tasks
      */
     public void showTaskDeleted(Task task, int taskCount) {
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        printLine("Noted. I've removed this task:");
+        printLine("  " + task);
+        printLine("Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -155,7 +178,7 @@ public class Ui {
     private void showCorruptionWarning(int corruptedRecordCount) {
         String recordLabel = corruptedRecordCount == 1 ? "record" : "records";
         String pronoun = corruptedRecordCount == 1 ? "it" : "them";
-        System.out.println("Warning: I found " + corruptedRecordCount
+        printLine("Warning: I found " + corruptedRecordCount
                 + " invalid saved task " + recordLabel + " and skipped " + pronoun + ".");
     }
 }

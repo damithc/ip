@@ -30,8 +30,10 @@ public class Main extends Application {
             Damien damien = new Damien(Damien.DEFAULT_DATA_FILE, guiUi);
             fxmlLoader.<MainWindow>getController().setDamien(damien, guiUi);
 
-            stage.setTitle("Damien");
-            stage.setResizable(false);
+            stage.setTitle("Damien | Task Assistant");
+            stage.setMinWidth(620);
+            stage.setMinHeight(520);
+            stage.setResizable(true);
             stage.setScene(scene);
             stage.show();
         } catch (IOException exception) {

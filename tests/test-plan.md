@@ -43,7 +43,9 @@ markers printed by Damien.
 ## GUI-specific smoke checks
 
 Run the GUI with `./gradlew run` and verify that the following interactions are
-visible in the conversation area:
+visible in the conversation area. Resize the window as part of the smoke check
+and confirm that the conversation area grows while the command controls stay
+anchored at the bottom:
 
 | Input | Expected GUI behavior |
 | --- | --- |

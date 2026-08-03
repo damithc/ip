@@ -1,0 +1,82 @@
+/*
+ * Base styling for Damien's task workspace.
+ *
+ * The colours are intentionally quiet and high-contrast so the conversation
+ * remains comfortable to read during a workday.
+ */
+.root {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-padding: 20px 24px 16px 24px;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 4px 0 0;
+    -fx-pref-width: 12px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c5d0df;
+    -fx-background-radius: 6px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #aab8cb;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9px;
+    -fx-border-color: #d7e0eb;
+    -fx-border-radius: 9px;
+    -fx-border-width: 1px;
+    -fx-padding: 0 14px;
+    -fx-text-fill: #172033;
+    -fx-prompt-text-fill: #8a97a9;
+    -fx-font-size: 15px;
+}
+
+.text-field:focused {
+    -fx-border-color: #2f6fed;
+    -fx-effect: dropshadow(gaussian, rgba(47, 111, 237, 0.18), 9, 0.25, 0, 1);
+}
+
+.button {
+    -fx-background-color: #2f6fed;
+    -fx-background-radius: 9px;
+    -fx-border-radius: 9px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.button:hover {
+    -fx-background-color: #245dcc;
+}
+
+.button:pressed {
+    -fx-background-color: #194aab;
+}
+
+.button:disabled {
+    -fx-background-color: #aebbd0;
+    -fx-text-fill: #eef2f7;
+}

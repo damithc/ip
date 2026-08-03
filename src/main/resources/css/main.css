@@ -8,6 +8,7 @@
     -fx-background-color: #f4f7fb;
     -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
+    -fx-font-style: normal;
 }
 
 .workspace-header {
@@ -24,7 +25,8 @@
 
 .workspace-subtitle {
     -fx-font-size: 13px;
-    -fx-text-fill: #b9c6d8;
+    -fx-font-style: normal;
+    -fx-text-fill: #d3dceb;
 }
 
 .scroll-pane,
@@ -66,8 +68,9 @@
     -fx-border-width: 1px;
     -fx-padding: 0 14px;
     -fx-text-fill: #172033;
-    -fx-prompt-text-fill: #8a97a9;
+    -fx-prompt-text-fill: #526174;
     -fx-font-size: 15px;
+    -fx-font-style: normal;
 }
 
 .text-field:focused {
@@ -103,6 +106,7 @@
     -fx-cursor: hand;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-font-style: normal;
     -fx-text-fill: #ffffff;
 }
 

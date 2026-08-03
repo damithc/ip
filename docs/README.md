@@ -15,7 +15,8 @@ conversation readable while the command field and `Send` button remain
 anchored to the bottom of the window.
 
 User commands and Damien's responses use separate high-contrast message
-bubbles, with compact avatars and spacing designed for quick scanning.
+bubbles, with compact avatars, readable upright text, and spacing designed for
+quick scanning.
 The header has a dedicated content area so the startup greeting remains fully
 visible below it, while the command bar keeps the input field and `Send` action
 together.

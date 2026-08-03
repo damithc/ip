@@ -13,8 +13,10 @@
     -fx-border-width: 1px;
     -fx-max-width: 600px;
     -fx-padding: 11px 15px;
-    -fx-text-fill: #263348;
+    -fx-text-fill: #182233;
     -fx-font-size: 14px;
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
     -fx-line-spacing: 2px;
 }
 

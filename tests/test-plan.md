@@ -47,7 +47,7 @@ visible in the conversation area. Resize the window as part of the smoke check
 and confirm that the conversation area grows while the command controls stay
 anchored at the bottom. Confirm that the startup greeting is fully visible
 below the header, and that user commands and Damien's responses are visually
-distinct and remain readable:
+distinct, use upright readable text, and remain readable:
 
 | Input | Expected GUI behavior |
 | --- | --- |

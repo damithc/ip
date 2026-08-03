@@ -13,7 +13,8 @@
     -fx-border-width: 1px;
     -fx-max-width: 600px;
     -fx-padding: 11px 15px;
-    -fx-text-fill: #182233;
+    -fx-font-family: "Helvetica Neue", "Helvetica", "Segoe UI", sans-serif;
+    -fx-text-fill: #0f172a;
     -fx-font-size: 14px;
     -fx-font-style: normal;
     -fx-font-weight: normal;

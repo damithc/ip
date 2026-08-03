@@ -6,7 +6,7 @@
  */
 .root {
     -fx-background-color: #f4f7fb;
-    -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
+    -fx-font-family: "Helvetica Neue", "Helvetica", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-style: normal;
 }
@@ -68,7 +68,7 @@
     -fx-border-width: 1px;
     -fx-padding: 0 14px;
     -fx-text-fill: #172033;
-    -fx-prompt-text-fill: #526174;
+    -fx-prompt-text-fill: #334155;
     -fx-font-size: 15px;
     -fx-font-style: normal;
 }

@@ -16,7 +16,8 @@ anchored to the bottom of the window.
 
 User commands and Damien's responses use separate high-contrast message
 bubbles, with compact avatars, readable upright text, and spacing designed for
-quick scanning.
+quick scanning. The interface uses a familiar office-style sans-serif font
+stack with dark text for comfortable reading.
 The header has a dedicated content area so the startup greeting remains fully
 visible below it, while the command bar keeps the input field and `Send` action
 together.

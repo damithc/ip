@@ -1,6 +1,7 @@
 # Damien User Guide
 
 Damien is a desktop task assistant for managing ToDos, deadlines, and events.
+ToDos and deadlines can optionally record the fixed time they require.
 This guide is for users running the released JAR file.
 
 ## Requirements
@@ -46,6 +47,7 @@ shown by `list`.
 | Command | Example | Description |
 | --- | --- | --- |
 | `todo <description>` | `todo borrow book` | Adds a ToDo. |
+| `todo <description> /duration <time>` | `todo read report /duration 2h` | Adds a ToDo with a fixed duration. |
 | `deadline <description> /by <date>` | `deadline return book /by 2019-12-02` | Adds a deadline. |
 | `event <description> /from <start> /to <end>` | `event project meeting /from Mon 2pm /to 4pm` | Adds an event. |
 | `list` | `list` | Shows all tasks in their current order. |
@@ -71,6 +73,26 @@ Damien also accepts the date format `d/M/yyyy` when a time is included:
 deadline submit report /by 2/12/2019 1800
 ```
 
+### Durations
+
+ToDos and deadlines can have an optional `/duration` field. It records how much
+time the task requires, without scheduling its start or end time. A deadline's
+`/by` and `/duration` fields can appear in either order:
+
+```text
+todo read sales report /duration 2 hours
+deadline submit report /by 2019-12-02 1800 /duration 1h 30m
+deadline submit report /duration 90m /by 2019-12-02 1800
+```
+
+Use a positive whole number of hours and/or minutes. Damien accepts `2h`,
+`2 hrs`, `2 hours`, `90m`, `90 minutes`, and `1h 30m`. Decimal values and
+durations of zero are not supported. Damien saves durations as minutes and
+shows them in a compact normalised form.
+
+Events cannot have a `/duration` field because their `/from` and `/to` fields
+already specify their time interval.
+
 ### Task status
 
 Damien displays tasks with a type marker and a completion marker:
@@ -79,7 +101,10 @@ Damien displays tasks with a type marker and a completion marker:
 [T][ ] borrow book
 [D][X] return book (by: Dec 2 2019)
 [E][ ] project meeting (from: Mon 2pm to: 4pm)
+[T][ ] read sales report >> 2h <<
+[D][ ] submit report (by: Dec 2 2019, 6:00 PM) >> 1h 30m <<
 ```
 
 `[T]`, `[D]`, and `[E]` identify ToDos, deadlines, and events. `[ ]` means
-not completed, while `[X]` means completed.
+not completed, while `[X]` means completed. `>> 2h <<` is a fixed-duration
+badge; it appears only when a ToDo or deadline has a duration.

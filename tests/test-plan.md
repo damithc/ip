@@ -141,14 +141,17 @@ the response for that row.
 | 38 | Negative | `delete 4` | ` OOPS!!! Task 4 does not exist. Use list to see valid task numbers.` |
 | 39 | Positive | `delete 3` | `[E][ ] project meeting (from: Mon 2pm to: 4pm)`; `Now you have 2 tasks in the list.` |
 | 40 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)` |
-| 41 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
+| 41 | Positive | `todo read sales report /duration 2 hours` | `[T][ ] read sales report >> 2h <<`; `Now you have 3 tasks in the list.` |
+| 42 | Positive state check | `list` | `1.[T][ ] borrow book`; `2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)`; `3.[T][ ] read sales report >> 2h <<` |
+| 43 | Positive | `delete 3` | `[T][ ] read sales report >> 2h <<`; `Now you have 2 tasks in the list.` |
+| 44 | Positive termination | `bye` | `Bye. Hope to see you again soon!` |
 
 ## Pass criteria
 
 The Gradle check run passes when compilation succeeds, every JUnit test passes,
 and Checkstyle reports no violations. The manual CLI run passes when the startup greeting is present, every
 response contains its expected output fragments, Damien exits with status 0,
-and all 41 main-session inputs complete. Run the persistence and corrupted-data
+and all 44 main-session inputs complete. Run the persistence and corrupted-data
 cases in fresh CLI sessions when checking storage behavior. Any compiler,
 runtime, or missing-output failure means that the test run did not pass.
 
@@ -184,3 +187,22 @@ The startup output must contain `Warning: I found 2 invalid saved task records a
 | --- | --- | --- |
 | 1 | `list` | `1.[T][ ] keep this task`; `2.[D][ ] return book (by: Dec 2 2019)` |
 | 2 | `bye` | `Bye. Hope to see you again soon!` |
+
+## Duration task test cases
+
+Run these cases in a separate temporary runtime directory. They verify the
+optional duration attribute on ToDos and deadlines, normalised badge display,
+field-order flexibility, invalid input handling, event rejection, and
+persistence.
+
+| Session | Order | Input | Expected output fragments |
+| --- | --- | --- | --- |
+| 1 | 1 | `todo read sales report /duration 2 hours` | `[T][ ] read sales report >> 2h <<`; `Now you have 1 tasks in the list.` |
+| 1 | 2 | `deadline submit report /duration 1h 30m /by 2019-12-02 1800` | `[D][ ] submit report (by: Dec 2 2019, 6:00 PM) >> 1h 30m <<`; `Now you have 2 tasks in the list.` |
+| 1 | 3 | `todo invalid /duration 0h` | ` OOPS!!! A duration must be a positive whole number of hours and/or minutes` |
+| 1 | 4 | `todo missing value /duration` | ` OOPS!!! A duration needs a value after /duration` |
+| 1 | 5 | `event meeting /from 2pm /to 4pm /duration 2h` | ` OOPS!!! An event already specifies its time interval and cannot have a /duration field.` |
+| 1 | 6 | `list` | `1.[T][ ] read sales report >> 2h <<`; `2.[D][ ] submit report (by: Dec 2 2019, 6:00 PM) >> 1h 30m <<` |
+| 1 | 7 | `bye` | `Bye. Hope to see you again soon!` |
+| 2 | 1 | `list` | `1.[T][ ] read sales report >> 2h <<`; `2.[D][ ] submit report (by: Dec 2 2019, 6:00 PM) >> 1h 30m <<` |
+| 2 | 2 | `bye` | `Bye. Hope to see you again soon!` |

@@ -38,6 +38,21 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that a ToDo accepts a duration and displays its normalised badge.
+     *
+     * @throws DamienException if the valid command cannot be parsed
+     */
+    @Test
+    public void parseTodoCommandExtractsDuration() throws DamienException {
+        Command command = parser.parse("todo read sales report /duration 2 hours");
+
+        Todo todo = assertInstanceOf(Todo.class, command.getTask());
+
+        assertEquals(120, todo.getDuration().orElseThrow().getMinutes());
+        assertEquals("[T][ ] read sales report >> 2h <<", todo.toString());
+    }
+
+    /**
      * Verifies that a deadline command separates its description and deadline.
      *
      * @throws DamienException if the valid command cannot be parsed
@@ -69,6 +84,23 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that deadline fields can appear in either order with a duration.
+     *
+     * @throws DamienException if the valid command cannot be parsed
+     */
+    @Test
+    public void parseDeadlineCommandExtractsDurationInEitherFieldOrder() throws DamienException {
+        Command command = parser.parse(
+                "deadline submit report /duration 1h 30m /by 2019-12-02 1800");
+
+        Deadline deadline = assertInstanceOf(Deadline.class, command.getTask());
+
+        assertEquals(90, deadline.getDuration().orElseThrow().getMinutes());
+        assertEquals("[D][ ] submit report (by: Dec 2 2019, 6:00 PM) >> 1h 30m <<",
+                deadline.toString());
+    }
+
+    /**
      * Verifies that an invalid deadline date is rejected with a useful message.
      */
     @Test
@@ -79,6 +111,20 @@ public class ParserTest {
         assertEquals("A deadline date must use yyyy-MM-dd, optionally followed by HHmm, "
                 + "or d/M/yyyy HHmm, for example: deadline return book /by 2019-10-15.",
                 exception.getMessage());
+    }
+
+    /** Verifies that empty and invalid duration fields are rejected with useful messages. */
+    @Test
+    public void parseRejectsMissingOrInvalidDuration() {
+        DamienException missingDuration = assertThrows(
+                DamienException.class, () -> parser.parse("todo read report /duration"));
+        DamienException invalidDuration = assertThrows(
+                DamienException.class, () -> parser.parse("deadline submit /by 2019-12-02 /duration 2 days"));
+
+        assertEquals("A duration needs a value after /duration, for example: "
+                + "todo read report /duration 2h.", missingDuration.getMessage());
+        assertEquals("A duration must be a positive whole number of hours and/or minutes, "
+                + "for example: deadline read report /duration 2h.", invalidDuration.getMessage());
     }
 
     /**
@@ -95,6 +141,16 @@ public class ParserTest {
         assertEquals("project meeting", event.getDescription());
         assertEquals("Mon 2pm", event.getFrom());
         assertEquals("4pm", event.getTo());
+    }
+
+    /** Verifies that duration fields are explicitly unsupported for scheduled events. */
+    @Test
+    public void parseEventCommandRejectsDuration() {
+        DamienException exception = assertThrows(DamienException.class, () -> parser.parse(
+                "event meeting /from 2pm /to 4pm /duration 2h"));
+
+        assertEquals("An event already specifies its time interval and cannot have a /duration field.",
+                exception.getMessage());
     }
 
     /**

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import duke.exception.DamienException;
 import duke.task.Deadline;
+import duke.task.Duration;
 import duke.task.Event;
 import duke.task.TaskList;
 import duke.task.Todo;
@@ -36,8 +37,9 @@ public class StorageTest {
         Path file = temporaryDirectory.resolve("nested/tasks.txt");
         Storage storage = new Storage(file);
         TaskList tasks = new TaskList();
-        Todo todo = new Todo("read book");
-        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 12, 2));
+        Todo todo = new Todo("read book", new Duration(120));
+        Deadline deadline = new Deadline("return book", LocalDate.of(2019, 12, 2),
+                new Duration(90));
         Event event = new Event("project meeting", "Mon 2pm", "4pm");
         deadline.markAsDone();
         tasks.add(todo);

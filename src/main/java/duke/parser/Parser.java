@@ -4,6 +4,7 @@ import duke.command.Command;
 import duke.command.CommandType;
 import duke.exception.DamienException;
 import duke.task.Deadline;
+import duke.task.Duration;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.Todo;
@@ -36,8 +37,7 @@ public class Parser {
             case FIND:
                 return new Command(commandType, parseFindKeyword(input, commandType));
             case TODO:
-                return new Command(commandType,
-                        new Todo(parseTodoDescription(input, commandType)));
+                return new Command(commandType, parseTodo(input, commandType));
             case DEADLINE:
                 return new Command(commandType, parseDeadline(input, commandType));
             case EVENT:
@@ -50,20 +50,20 @@ public class Parser {
     }
 
     /**
-     * Extracts and validates the description of a ToDo command.
+     * Extracts and validates a ToDo description and its optional duration.
      *
      * @param command the complete ToDo command
      * @param commandType the command type identified from the input
-     * @return the non-empty ToDo description
-     * @throws DamienException if the description is empty
+     * @return the parsed ToDo task
+     * @throws DamienException if the description or supplied duration is invalid
      */
-    private String parseTodoDescription(String command, CommandType commandType)
+    private Task parseTodo(String command, CommandType commandType)
             throws DamienException {
-        String description = getArgument(command, commandType);
-        if (description.isEmpty()) {
+        TaskDetails details = parseTaskDetails(getArgument(command, commandType));
+        if (details.description.isEmpty()) {
             throw new DamienException("The description of a todo cannot be empty.");
         }
-        return description;
+        return new Todo(details.description, parseDuration(details.duration, "todo"));
     }
 
     /**
@@ -122,13 +122,18 @@ public class Parser {
     private Task parseDeadline(String command, CommandType commandType) throws DamienException {
         String argument = getArgument(command, commandType);
         int byIndex = argument.indexOf("/by");
+        int durationIndex = argument.indexOf("/duration");
         if (byIndex < 0) {
             throw new DamienException("A deadline needs a /by field, for example: "
                     + "deadline return book /by 2019-10-15.");
         }
 
-        String description = argument.substring(0, byIndex).trim();
-        String by = argument.substring(byIndex + "/by".length()).trim();
+        int firstFieldIndex = durationIndex < 0 ? byIndex : Math.min(byIndex, durationIndex);
+        String description = argument.substring(0, firstFieldIndex).trim();
+        String by = extractFieldValue(argument, byIndex, "/by".length(), durationIndex);
+        String duration = durationIndex < 0
+                ? null
+                : extractFieldValue(argument, durationIndex, "/duration".length(), byIndex);
         if (description.isEmpty()) {
             throw new DamienException("A deadline needs a description before /by, for example: "
                     + "deadline return book /by 2019-10-15.");
@@ -138,7 +143,7 @@ public class Parser {
                     + "deadline return book /by 2019-10-15.");
         }
         try {
-            return new Deadline(description, by);
+            return new Deadline(description, by, parseDuration(duration, "deadline"));
         } catch (IllegalArgumentException exception) {
             throw new DamienException("A deadline date must use yyyy-MM-dd, optionally followed by HHmm, "
                     + "or d/M/yyyy HHmm, for example: deadline return book /by 2019-10-15.");
@@ -155,6 +160,10 @@ public class Parser {
      */
     private Task parseEvent(String command, CommandType commandType) throws DamienException {
         String argument = getArgument(command, commandType);
+        if (argument.contains("/duration")) {
+            throw new DamienException("An event already specifies its time interval and cannot have a "
+                    + "/duration field.");
+        }
         int fromIndex = argument.indexOf("/from");
         int toIndex = argument.indexOf("/to", fromIndex + "/from".length());
         if (fromIndex < 0) {
@@ -185,6 +194,61 @@ public class Parser {
     }
 
     /**
+     * Splits a ToDo argument into its description and optional duration field.
+     *
+     * @param argument the text after the ToDo command keyword
+     * @return the extracted task details
+     */
+    private TaskDetails parseTaskDetails(String argument) {
+        int durationIndex = argument.indexOf("/duration");
+        if (durationIndex < 0) {
+            return new TaskDetails(argument.trim(), null);
+        }
+        String description = argument.substring(0, durationIndex).trim();
+        String duration = argument.substring(durationIndex + "/duration".length()).trim();
+        return new TaskDetails(description, duration);
+    }
+
+    /**
+     * Extracts one field's value while allowing the two deadline fields in either order.
+     *
+     * @param argument the deadline command text
+     * @param fieldIndex the index where the requested field begins
+     * @param fieldLength the requested field marker's length
+     * @param otherFieldIndex the other field's index, or a negative value when absent
+     * @return the trimmed text belonging to the requested field
+     */
+    private String extractFieldValue(String argument, int fieldIndex, int fieldLength,
+                                     int otherFieldIndex) {
+        int endIndex = otherFieldIndex > fieldIndex ? otherFieldIndex : argument.length();
+        return argument.substring(fieldIndex + fieldLength, endIndex).trim();
+    }
+
+    /**
+     * Parses an optional task duration and converts invalid input into a user-facing error.
+     *
+     * @param durationText the text after the optional {@code /duration} field
+     * @param commandName the command used in an error example
+     * @return the parsed duration, or {@code null} when no duration was supplied
+     * @throws DamienException if a supplied duration is missing or invalid
+     */
+    private Duration parseDuration(String durationText, String commandName) throws DamienException {
+        if (durationText == null) {
+            return null;
+        }
+        if (durationText.isEmpty()) {
+            throw new DamienException("A duration needs a value after /duration, for example: "
+                    + commandName + " read report /duration 2h.");
+        }
+        try {
+            return Duration.parse(durationText);
+        } catch (IllegalArgumentException exception) {
+            throw new DamienException("A duration must be a positive whole number of hours and/or "
+                    + "minutes, for example: " + commandName + " read report /duration 2h.");
+        }
+    }
+
+    /**
      * Extracts the text after a command keyword.
      *
      * @param command the complete command
@@ -196,5 +260,25 @@ public class Parser {
                 && command.startsWith(commandType.getKeyword())
                 : "The parser must extract arguments from a matching command.";
         return command.substring(commandType.getKeyword().length()).trim();
+    }
+
+    /** Holds the description and optional duration extracted from a task command. */
+    private static class TaskDetails {
+        /** The non-field portion that describes the task. */
+        private final String description;
+
+        /** The optional text after {@code /duration}; {@code null} when absent. */
+        private final String duration;
+
+        /**
+         * Creates extracted task details.
+         *
+         * @param description the task description
+         * @param duration the optional duration text
+         */
+        TaskDetails(String description, String duration) {
+            this.description = description;
+            this.duration = duration;
+        }
     }
 }

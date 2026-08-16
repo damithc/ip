@@ -1,6 +1,7 @@
 package duke.storage;
 
 import duke.task.Deadline;
+import duke.task.Duration;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.Todo;
@@ -50,17 +51,21 @@ public class TaskFactory {
         Task task;
         switch (type) {
             case TODO_RECORD_TYPE:
-                if (fields.length != 3) {
-                    return null;
-                }
-                task = new Todo(description);
-                break;
-            case DEADLINE_RECORD_TYPE:
-                if (fields.length != 4 || fields[3].isEmpty()) {
+                if (fields.length != 3 && fields.length != 4) {
                     return null;
                 }
                 try {
-                    task = new Deadline(description, fields[3]);
+                    task = new Todo(description, parseDuration(fields, 3));
+                } catch (IllegalArgumentException exception) {
+                    return null;
+                }
+                break;
+            case DEADLINE_RECORD_TYPE:
+                if ((fields.length != 4 && fields.length != 5) || fields[3].isEmpty()) {
+                    return null;
+                }
+                try {
+                    task = new Deadline(description, fields[3], parseDuration(fields, 4));
                 } catch (IllegalArgumentException exception) {
                     return null;
                 }
@@ -81,6 +86,28 @@ public class TaskFactory {
         }
         assert task.isDone() == shouldBeDone : "A task must preserve its stored completion status.";
         return task;
+    }
+
+    /**
+     * Reads an optional positive whole-minute duration field from a stored record.
+     *
+     * @param fields the split storage record
+     * @param durationIndex the index where a duration is present when supplied
+     * @return the parsed duration, or {@code null} when the record has no duration field
+     * @throws IllegalArgumentException if the duration field is absent, empty, or invalid
+     */
+    private Duration parseDuration(String[] fields, int durationIndex) {
+        if (fields.length == durationIndex) {
+            return null;
+        }
+        if (fields[durationIndex].isEmpty()) {
+            throw new IllegalArgumentException("A stored duration must not be empty.");
+        }
+        try {
+            return new Duration(Integer.parseInt(fields[durationIndex]));
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("A stored duration must be a whole number.", exception);
+        }
     }
 
     /**

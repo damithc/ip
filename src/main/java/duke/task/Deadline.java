@@ -57,7 +57,18 @@ public class Deadline extends Task {
      * @param by the date by which the work should be completed
      */
     public Deadline(String description, LocalDate by) {
-        this(description, by.atStartOfDay(), false);
+        this(description, by, null);
+    }
+
+    /**
+     * Creates a date-only deadline task with an optional fixed duration.
+     *
+     * @param description the work to be completed
+     * @param by the date by which the work should be completed
+     * @param duration the fixed time required, or {@code null} when unspecified
+     */
+    public Deadline(String description, LocalDate by, Duration duration) {
+        this(description, by.atStartOfDay(), false, duration);
     }
 
     /**
@@ -67,7 +78,18 @@ public class Deadline extends Task {
      * @param by the date and time by which the work should be completed
      */
     public Deadline(String description, LocalDateTime by) {
-        this(description, by, true);
+        this(description, by, null);
+    }
+
+    /**
+     * Creates a deadline task with a date, time, and optional fixed duration.
+     *
+     * @param description the work to be completed
+     * @param by the date and time by which the work should be completed
+     * @param duration the fixed time required, or {@code null} when unspecified
+     */
+    public Deadline(String description, LocalDateTime by, Duration duration) {
+        this(description, by, true, duration);
     }
 
     /**
@@ -79,7 +101,19 @@ public class Deadline extends Task {
      * @throws IllegalArgumentException if the deadline does not use a supported format
      */
     public Deadline(String description, String by) {
-        this(description, parseDateTime(by), hasTime(by));
+        this(description, by, null);
+    }
+
+    /**
+     * Creates a deadline task from a supported date representation and duration.
+     *
+     * @param description the work to be completed
+     * @param by the deadline in a supported date or date-time format
+     * @param duration the fixed time required, or {@code null} when unspecified
+     * @throws IllegalArgumentException if the deadline does not use a supported format
+     */
+    public Deadline(String description, String by, Duration duration) {
+        this(description, parseDateTime(by), hasTime(by), duration);
     }
 
     /**
@@ -89,8 +123,8 @@ public class Deadline extends Task {
      * @param by the parsed date and optional time
      * @param hasTime whether the original value included a time
      */
-    private Deadline(String description, LocalDateTime by, boolean hasTime) {
-        super(description);
+    private Deadline(String description, LocalDateTime by, boolean hasTime, Duration duration) {
+        super(description, duration);
         assert by != null : "A deadline must have a parsed date and time.";
         this.by = by;
         this.hasTime = hasTime;
@@ -120,7 +154,8 @@ public class Deadline extends Task {
         String storedDeadline = hasTime
                 ? STORAGE_DATE_TIME_FORMATTER.format(by)
                 : STORAGE_DATE_FORMATTER.format(by);
-        return "D | " + status + " | " + getDescription() + " | " + storedDeadline;
+        return "D | " + status + " | " + getDescription() + " | " + storedDeadline
+                + getDurationStorageSuffix();
     }
 
     @Override
@@ -128,7 +163,8 @@ public class Deadline extends Task {
         DateTimeFormatter formatter = hasTime
                 ? DISPLAY_DATE_TIME_FORMATTER
                 : DISPLAY_DATE_FORMATTER;
-        return "[D]" + super.toString() + " (by: " + formatter.format(by) + ")";
+        return "[D]" + super.toString() + " (by: " + formatter.format(by) + ")"
+                + getDurationDisplaySuffix();
     }
 
     /**

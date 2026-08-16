@@ -37,6 +37,10 @@ public class DamienTest {
         assertTrue(addResponse.contains("[T][ ] read book"));
         assertTrue(addResponse.contains("Now you have 1 tasks in the list."));
 
+        assertTrue(damien.processCommand("deadline submit report /by 2019-12-02 /duration 2h"));
+        assertTrue(guiUi.consumeOutput().contains(
+                "[D][ ] submit report (by: Dec 2 2019) >> 2h <<"));
+
         assertTrue(damien.processCommand("list"));
         assertTrue(guiUi.consumeOutput().contains("1.[T][ ] read book"));
 

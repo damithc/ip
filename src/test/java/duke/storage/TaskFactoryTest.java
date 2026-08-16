@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import duke.task.Deadline;
+import duke.task.Duration;
 import duke.task.Event;
 import duke.task.Task;
 import duke.task.Todo;
@@ -32,6 +33,18 @@ public class TaskFactoryTest {
         Todo todo = assertInstanceOf(Todo.class, task);
         assertEquals("read book", todo.getDescription());
         assertFalse(todo.isDone());
+    }
+
+    /** Verifies that a stored ToDo duration is restored from its minute value. */
+    @Test
+    public void createFromStorageCreatesTodoWithDuration() {
+        Task task = taskFactory.createFromStorage("T | 0 | read report | 120");
+
+        Todo todo = assertInstanceOf(Todo.class, task);
+
+        assertEquals(120, todo.getDuration().orElseThrow().getMinutes());
+        assertEquals("[T][ ] read report >> 2h <<", todo.toString());
+        assertEquals("T | 0 | read report | 120", todo.toStorageString());
     }
 
     /**
@@ -59,6 +72,18 @@ public class TaskFactoryTest {
         assertEquals("D | 0 | return book | 2019-12-02 1800", deadline.toStorageString());
     }
 
+    /** Verifies that a stored deadline duration is restored from its minute value. */
+    @Test
+    public void createFromStorageCreatesDeadlineWithDuration() {
+        Task task = taskFactory.createFromStorage("D | 1 | write report | 2019-12-02 | 90");
+
+        Deadline deadline = assertInstanceOf(Deadline.class, task);
+
+        assertEquals(new Duration(90).getMinutes(), deadline.getDuration().orElseThrow().getMinutes());
+        assertTrue(deadline.isDone());
+        assertEquals("D | 1 | write report | 2019-12-02 | 90", deadline.toStorageString());
+    }
+
     /**
      * Verifies that an event record preserves both event times.
      */
@@ -80,7 +105,9 @@ public class TaskFactoryTest {
     public void createFromStorageRejectsMalformedRecords() {
         assertNull(taskFactory.createFromStorage("invalid record"));
         assertNull(taskFactory.createFromStorage("T | 2 | invalid status"));
+        assertNull(taskFactory.createFromStorage("T | 0 | invalid duration | 0"));
         assertNull(taskFactory.createFromStorage("D | 0 | missing deadline | "));
+        assertNull(taskFactory.createFromStorage("D | 0 | invalid duration | 2019-12-02 | two hours"));
         assertNull(taskFactory.createFromStorage("D | 0 | invalid date | 2019-02-30"));
         assertNull(taskFactory.createFromStorage("E | 0 | missing end | 2pm | "));
         assertNull(taskFactory.createFromStorage("X | 0 | unknown type"));

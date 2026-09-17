@@ -1,8 +1,59 @@
-# Damien User Guide
+---
+title: Damien | Task Assistant
+---
 
-Damien is a desktop task assistant for managing ToDos, deadlines, and events.
-ToDos and deadlines can optionally record the fixed time they require.
-This guide is for users running the released JAR file.
+<section class="damien-hero">
+  <div class="damien-hero__copy">
+    <p class="damien-kicker">YOUR FRIENDLY TASK ASSISTANT</p>
+    <h1>Make space for<br><span>what matters.</span></h1>
+    <p class="damien-hero__summary">Damien turns short, natural commands into a clear task list, so you can capture what needs doing and get back to your day.</p>
+    <p class="damien-hero__actions">
+      <a class="damien-button" href="#downloading-and-starting-damien">Get Damien</a>
+      <a class="damien-link" href="#commands">Explore commands <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+  <div class="damien-hero__note" aria-label="A sample Damien command">
+    <span class="damien-hero__sparkle" aria-hidden="true">✦</span>
+    <p class="damien-hero__note-label">A little help for today</p>
+    <code>todo finish project proposal /duration 2h</code>
+    <p>Captured. One less thing to remember.</p>
+  </div>
+</section>
+
+<section class="damien-intro" aria-labelledby="damien-guide-title">
+  <div>
+    <p class="damien-kicker">SIMPLE BY DESIGN</p>
+    <h2 id="damien-guide-title">A task list that talks back.</h2>
+  </div>
+  <p>Damien is a desktop task assistant for managing ToDos, deadlines, and events. It keeps the interaction simple: type a command, receive a helpful confirmation, and stay on top of your work.</p>
+</section>
+
+<div class="damien-feature-grid">
+  <section class="damien-feature-card damien-feature-card--pink">
+    <span aria-hidden="true">✓</span>
+    <h2>Capture tasks quickly</h2>
+    <p>Add ToDos, deadlines, and events using short commands you can learn in minutes.</p>
+  </section>
+  <section class="damien-feature-card damien-feature-card--yellow">
+    <span aria-hidden="true">◷</span>
+    <h2>Keep time in view</h2>
+    <p>Attach a deadline, an event window, or a fixed duration when a task needs one.</p>
+  </section>
+  <section class="damien-feature-card damien-feature-card--blue">
+    <span aria-hidden="true">⌕</span>
+    <h2>Find your focus</h2>
+    <p>List, complete, delete, and search your tasks without leaving the conversation.</p>
+  </section>
+</div>
+
+<figure class="damien-screenshot">
+  <img src="images/damien-task-list.png" alt="Damien showing a conversation that adds a team stand-up and lists a ToDo, deadline, and event." />
+  <figcaption><strong>One friendly conversation, all of your tasks.</strong> Damien confirms each command and keeps the latest list close at hand.</figcaption>
+</figure>
+
+## Damien User Guide
+
+This guide explains how to run the released JAR file and use Damien's commands.
 
 ## Requirements
 

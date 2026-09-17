@@ -1,0 +1,308 @@
+/* A warm, playful layer over GitHub Pages' Primer theme. */
+:root {
+    --damien-ink: #20243b;
+    --damien-muted: #60667e;
+    --damien-cream: #fff6ee;
+    --damien-coral: #ff705c;
+    --damien-pink: #ffe0ed;
+    --damien-yellow: #fff0ae;
+    --damien-blue: #dce9ff;
+    --damien-purple: #6956c9;
+}
+
+body {
+    background:
+        radial-gradient(circle at 7% 14%, rgba(255, 215, 174, 0.42), transparent 22rem),
+        radial-gradient(circle at 93% 21%, rgba(220, 233, 255, 0.72), transparent 24rem),
+        var(--damien-cream);
+    color: var(--damien-ink);
+}
+
+.container-lg {
+    max-width: 1060px;
+    padding-bottom: 4rem;
+}
+
+/* This is the repository name emitted by the stock Primer layout. */
+.container-lg > h1:first-child {
+    display: none;
+}
+
+.markdown-body {
+    background: transparent;
+    color: var(--damien-ink);
+    font-size: 1rem;
+}
+
+.markdown-body h2,
+.markdown-body h3 {
+    color: var(--damien-ink);
+    border-bottom: 0;
+}
+
+.markdown-body > h2 {
+    margin-top: 4.5rem;
+    padding-top: 1rem;
+    font-size: 2rem;
+}
+
+.markdown-body a {
+    color: #5540b0;
+}
+
+.damien-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(250px, 0.8fr);
+    gap: 2.5rem;
+    overflow: hidden;
+    margin: 1.2rem 0 3.25rem;
+    padding: 3.75rem;
+    border: 1px solid rgba(32, 36, 59, 0.08);
+    border-radius: 28px;
+    background: #20243b;
+    box-shadow: 0 20px 45px rgba(45, 38, 69, 0.18);
+}
+
+.damien-hero::after {
+    position: absolute;
+    right: -5.5rem;
+    bottom: -7rem;
+    width: 18rem;
+    height: 18rem;
+    border: 2.5rem solid rgba(255, 213, 163, 0.21);
+    border-radius: 50%;
+    content: "";
+}
+
+.damien-hero__copy,
+.damien-hero__note {
+    position: relative;
+    z-index: 1;
+}
+
+.damien-kicker {
+    margin: 0 0 0.75rem;
+    color: var(--damien-coral);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.damien-hero h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+}
+
+.damien-hero h1 span {
+    color: #ffd5a3;
+}
+
+.damien-hero__summary {
+    max-width: 34rem;
+    margin: 1.25rem 0 1.8rem;
+    color: #d9ddeb;
+    font-size: 1.1rem;
+    line-height: 1.65;
+}
+
+.damien-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.15rem;
+    margin: 0;
+}
+
+.damien-button {
+    display: inline-block;
+    padding: 0.8rem 1.15rem;
+    border-radius: 999px;
+    background: var(--damien-coral);
+    color: #ffffff !important;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+.damien-button:hover {
+    background: #e95344;
+}
+
+.damien-link {
+    color: #ffd5a3 !important;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+.damien-link span {
+    padding-left: 0.18rem;
+}
+
+.damien-hero__note {
+    align-self: center;
+    padding: 1.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    border-radius: 20px;
+    background: #fffaf5;
+    color: var(--damien-ink);
+    box-shadow: 10px 10px 0 rgba(255, 112, 92, 0.9);
+    transform: rotate(2deg);
+}
+
+.damien-hero__note-label {
+    margin: 0 0 0.75rem;
+    color: #7c5471;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.damien-hero__note code {
+    display: block;
+    padding: 0.7rem;
+    border-radius: 9px;
+    background: #f0e7ff;
+    color: #4c3b89;
+    font-size: 0.83rem;
+    overflow-wrap: anywhere;
+}
+
+.damien-hero__note p:last-child {
+    margin: 0.85rem 0 0;
+    color: var(--damien-muted);
+    font-size: 0.93rem;
+}
+
+.damien-hero__sparkle {
+    position: absolute;
+    top: -1.4rem;
+    right: 0.8rem;
+    color: #ffd57e;
+    font-size: 2.4rem;
+}
+
+.damien-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: end;
+    margin: 0 1rem 3rem;
+}
+
+.damien-intro h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+}
+
+.damien-intro > p {
+    margin: 0;
+    color: var(--damien-muted);
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.damien-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 3rem;
+}
+
+.damien-feature-card {
+    min-height: 13rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(32, 36, 59, 0.09);
+    border-radius: 20px;
+    box-shadow: 0 8px 18px rgba(45, 38, 69, 0.07);
+}
+
+.damien-feature-card--pink {
+    background: var(--damien-pink);
+}
+
+.damien-feature-card--yellow {
+    background: var(--damien-yellow);
+}
+
+.damien-feature-card--blue {
+    background: var(--damien-blue);
+}
+
+.damien-feature-card > span {
+    display: grid;
+    width: 2.4rem;
+    height: 2.4rem;
+    place-items: center;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--damien-purple);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.damien-feature-card h2 {
+    margin: 1.1rem 0 0.55rem;
+    font-size: 1.22rem;
+}
+
+.damien-feature-card p {
+    margin: 0;
+    color: #4f5368;
+    line-height: 1.55;
+}
+
+.damien-screenshot {
+    margin: 0 0 1rem;
+    padding: 0.65rem;
+    border: 1px solid rgba(32, 36, 59, 0.1);
+    border-radius: 23px;
+    background: #ffffff;
+    box-shadow: 0 20px 45px rgba(45, 38, 69, 0.14);
+}
+
+.damien-screenshot img {
+    display: block;
+    width: 100%;
+    border-radius: 16px;
+}
+
+.damien-screenshot figcaption {
+    padding: 1.1rem 0.75rem 0.5rem;
+    color: var(--damien-muted);
+}
+
+.damien-screenshot figcaption strong {
+    color: var(--damien-ink);
+}
+
+@media screen and (max-width: 700px) {
+    .damien-hero,
+    .damien-intro,
+    .damien-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .damien-hero {
+        gap: 2rem;
+        margin-top: 0.5rem;
+        padding: 2.2rem 1.5rem;
+    }
+
+    .damien-hero__note {
+        margin: 0 0.45rem;
+    }
+
+    .damien-intro {
+        gap: 1.25rem;
+        margin: 0 0.5rem 2.5rem;
+    }
+
+    .damien-feature-card {
+        min-height: auto;
+    }
+}

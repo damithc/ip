@@ -4,7 +4,7 @@
 
 This plan describes the end-to-end command-processing test run performed by an
 AI. It covers
-the normal commands documented in `docs/README.md`, malformed commands, and
+the normal commands documented in `docs/index.md`, malformed commands, and
 invalid task numbers. The cases are run in one session so that negative cases
 also verify that an error does not change the task list or later task state.
 The GUI uses the same command-processing path, so these cases remain useful
